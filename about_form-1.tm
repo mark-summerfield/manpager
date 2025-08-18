@@ -17,7 +17,7 @@ proc about_form::make_widgets {} {
     tk::toplevel .about
     wm title .about "[tk appname] — About"
     wm resizable .about false false
-    set height 14
+    set height 15
     tk::text .about.text -width 50 -height $height -wrap word \
         -background "#F0F0F0" -spacing3 3
     populate_about_text

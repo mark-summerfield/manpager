@@ -21,9 +21,16 @@ proc text_replace_ctrl_h txt {
         $txt delete $i $k
         set j $k
     }
+    foreach {i j} [$txt tag ranges bold] {
+        set word [$txt get $i $j]
+        if {[string match {-*} $word]} {
+            $txt tag remove bold $i $j
+            $txt tag add boldopt $i $j
+        }
+    }
 }
 
-proc text_apply_links txt {
+proc text_apply_styles txt {
     foreach i1 [$txt search -all -regexp {[-\w]+\(\d\)} 1.0] {
         set i2 "$i1 wordend + 3 chars"
         $txt tag add manlink $i1 $i2
@@ -32,4 +39,11 @@ proc text_apply_links txt {
         set i2 [$txt search -regexp {[\s>]} $i1]
         $txt tag add url $i1 $i2
     }
+    $txt tag remove manlink 1.0 1.end
+    $txt tag remove url 1.0 1.end
+    set last [$txt index "end -1 line"]
+    $txt tag remove manlink $last end
+    $txt tag remove url $last end
+    $txt tag add header 1.0 1.end
+    $txt tag add footer $last end
 }

@@ -60,7 +60,7 @@ oo::define App method view_page filename {
     set man [read $fh]
     close $fh
     $View delete 1.0 end
-    $View insert end $man
+    $View insert end [string trimright $man]
     text_replace_ctrl_h $View
-    text_apply_links $View
+    text_apply_styles $View
 }

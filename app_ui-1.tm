@@ -1,6 +1,7 @@
 # Copyright © 2025 Mark Summerfield. All rights reserved.
 
 package require autoscroll 1
+package require ntext 1
 package require txt
 package require ui
 
@@ -59,7 +60,13 @@ oo::define App method make_view {} {
     set right [ttk::frame .hsplit.right]
     set View [text $right.view -font Mono -undo false -wrap none]
     pack $View -fill both -expand true
-    $View tag configure bold -font MonoBold -foreground navy
+    bindtags $View {$View Ntext . all}
+    $View tag configure header -foreground navy -background lightcyan \
+        -underline false
+    $View tag configure footer -foreground gray25 -background gray85 \
+        -underline false
+    $View tag configure bold -font MonoBold -foreground darkblue
+    $View tag configure boldopt -font MonoBold -foreground darkgreen
     $View tag configure italic -font MonoItalic -foreground darkgreen
     $View tag configure manlink -foreground blue -underline true
     $View tag configure url -foreground brown -underline true
@@ -84,7 +91,6 @@ oo::define App method make_layout {} {
 oo::define App method make_bindings {} {
     bind $Tree <<TreeviewSelect>> [callback on_tree_select]
     bind $View <<Selection>> [callback on_text_select]
-    bind . <Escape> [callback on_quit]
     bind .top.findEntry <Return> [callback on_find]
     bind . <F3> [callback on_find]
     bind . <Alt-a> {.top.findApropos invoke}

@@ -1,7 +1,6 @@
 # Copyright © 2025 Mark Summerfield. All rights reserved.
 
 package require autoscroll 1
-package require ntext 1
 package require txt
 package require ui
 
@@ -60,7 +59,6 @@ oo::define App method make_view {} {
     set right [ttk::frame .hsplit.right]
     set View [text $right.view -font Mono -undo false -wrap none]
     pack $View -fill both -expand true
-    bindtags $View {$View Ntext . all}
     $View tag configure header -foreground navy -background lightcyan \
         -underline false
     $View tag configure footer -foreground gray25 -background gray85 \

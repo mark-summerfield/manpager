@@ -8,6 +8,7 @@ oo::class create Config {
     variable Geometry
     variable FontSize
     variable FontFamily
+    variable Page
     variable Path
 }
 
@@ -16,6 +17,7 @@ oo::define Config constructor {{filename ""} {geometry ""}} {
     set Geometry $geometry
     set FontSize [expr {2 + [font configure TkFixedFont -size]}]
     set FontFamily [font configure TkFixedFont -family]
+    set Page ""
     set Path /usr/share/man
 }
 
@@ -32,6 +34,7 @@ oo::define Config classmethod load {} {
                                 [$config fontsize]]
             $config fontfamily [ini::value $ini General FontFamily \
                                 [$config fontfamily]]
+            $config page [ini::value $ini General Page [$config page]]
             $config path [ini::value $ini General Path [$config path]]
         } finally {
             ini::close $ini
@@ -46,6 +49,7 @@ oo::define Config method save {} {
         ini::set $ini General Geometry [wm geometry .]
         ini::set $ini General FontSize [my fontsize]
         ini::set $ini General FontFamily [my fontfamily]
+        ini::set $ini General Page [my page]
         ini::set $ini General Path [my path]
         ini::commit $ini
     } finally {
@@ -78,7 +82,12 @@ oo::define Config method path {{path ""}} {
     return $Path
 }
 
+oo::define Config method page {{page ""}} {
+    if {$page ne ""} { set Page $page }
+    return $Page
+}
+
 oo::define Config method to_string {} {
     return "Config filename=$Filename geometry=$Geometry\
-        fontsize=$FontSize path=$Path"
+        fontsize=$FontSize page=$Page path=$Path"
 }

@@ -1,7 +1,5 @@
 # TODO
-# - handle URLs (ui::open_webpage)
 # - handle manpage links
-# - save/restore last page (get rid of random choice)
 # - add History top-level item to tree
 #   . items added to history will need to use an id of filename#[uid]
 #   . & the ending #NNN... will need to be stripped for view_page

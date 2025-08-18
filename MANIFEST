@@ -1,6 +1,4 @@
 # TODO
-# - rename git repo & locally to: manpager
-# - rename manview to manpager throughout
 # - handle manpage links
 # - end use of wishinit.tcl:
 #   . use config-1.tm and
@@ -13,7 +11,7 @@
 # - search for keyword: man -k text
 # - search for text: man -Kw text (slow)
 
-manview.tcl # VERSION
+manpager.tcl # VERSION
 app-1.tm
 app_ui-1.tm # TODO tooltips since there's no online help
 app_actions-1.tm # TODO on_text_select

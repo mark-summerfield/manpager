@@ -17,7 +17,7 @@ oo::class create App {
 oo::define App constructor {} {
     set FindWhat apropos
     ui::wishinit
-    tk appname Manview
+    tk appname Manpager
     set Cfg [Config load]
     my make_ui
     my populate_tree

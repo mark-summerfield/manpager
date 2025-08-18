@@ -66,13 +66,13 @@ proc about_form::populate_about_text {} {
     $txt tag add spaceabove $img
     $txt tag add center $img
     set cmd [list $txt insert end]
-    {*}$cmd "\nManview $::VERSION\n" {center title}
+    {*}$cmd "\nManpager $::VERSION\n" {center title}
     {*}$cmd "A Unix man page viewer.\n\n" {center navy}
     set year [clock format [clock seconds] -format %Y]
     if {$year > 2025} { set year "2025-[string range $year end-1 end]" }
     set bits [expr {8 * $::tcl_platform(wordSize)}]
     set distro [exec lsb_release -ds]
-    {*}$cmd "https://github.com/mark-summerfield/manview\n" \
+    {*}$cmd "https://github.com/mark-summerfield/manpager\n" \
         {center green url}
     {*}$cmd "Copyright © $year Mark Summerfield.\nAll Rights Reserved.\n" \
         {center green}

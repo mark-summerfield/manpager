@@ -1,4 +1,4 @@
-# Manview
+# Manpager
 
 A GUI Unix man page view (an alternative to gman).
 

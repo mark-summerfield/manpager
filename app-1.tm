@@ -4,6 +4,7 @@ package require config
 package require lambda 1
 package require man
 package require ui
+package require util
 package require fileutil::traverse 
 
 oo::class create App {
@@ -28,6 +29,7 @@ oo::define App method show {} {
     .top.findApropos invoke
     raise .
     update
+    my show_random
 }
 
 oo::define App method populate_tree {} {
@@ -64,4 +66,18 @@ oo::define App method populate_sections {} {
             [$Tree insert {} end -id S8 -text "8 Sysadmin (root)"] \
             [$Tree insert {} end -id S9 -text "9 Kernel routines"] \
             [$Tree insert {} end -id Found -text "Found"]
+}
+
+oo::define App method show_random {} {
+    foreach _ [lseq 5] {
+        set section [lrandom [$Tree children {}]]
+        set letter [lrandom [$Tree children $section]]
+        set sel [lrandom [$Tree children $letter]]
+        if {[string match /* $sel]} {
+            $Tree see $sel
+            $Tree selection set $sel
+            $Tree focus $sel
+            break
+        }
+    }
 }

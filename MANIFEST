@@ -1,42 +1,13 @@
-# TODO (1) choose a random leaf at startup
-# TODO (2) Add &Quit button after A&bout
-# TODO (3) if `man` does _not_ support text search,
-#	    drop the ( ) &Text radio button
-# TODO (4) Add icons for &Find label, & A&bout & &Quit buttons -compound left
-# TODO (5) create ~/app/tcl/xmisc/man2txt.tcl
-#	    - use plain tk text widget with Mono MonoBold etc. tags
-#	    - read exec man -Tutf8 filename
-#	    - replace x^Hx with bold x etc.
-#		# convert _^Hc to italic c and c^Hc to bold c
-#		proc replace_ctrl_h {txt} {
-#		     set j 1.0
-#		     while {$j ne ""} {
-#			set j [$txt search \b $j]
-#			if {$j ne ""} {
-#			    set i [$txt index "$j -1 char"]
-#			    set tag [expr {[$txt get $i] eq "_" ? italic : bold}]
-#			    $txt tag add $tag "$j +1 char"
-#			    $txt delete $i $j
-#			}
-#		     }
-#		}
-#	    - use tags based on man.vim syntax highlighting 
-#	if the above fails, port ~/app/tcl/xmisc/htmltxt.tcl to html_text-1.tm 
-#	    - get rid of <a> tag handling & ReadParam
-#	    - get rid of debug lines (put ...)
-#	    - make URLs clickable (ui::open_webpage)
-#	    - make manpages clickable (provide a callback and parse
-#		"manpage(n)" to "manpage" and n and search toplevel n
-#		for "manpage" and do show_page on it if found
-# TODO (6) add History top-level item to tree
-#	    . items added to history will need to use an id of 
-#		filename#[uid]
-#	    . & the ending #NNN... will need to be stripped for view_page
-#	    . proc uid {} { return #[string range [clock clicks] end-8 end] }
-# TODO (7) search for name: search the tree itself
-# TODO (8) search for keyword: man -k text
-# TODO (9) search for text: man ??? [only if man supports text search]
-# TODO (10) GPLv3 & put on github & contac gman Debian packager
+# TODO
+# - handle URLs (ui::open_webpage)
+# - handle manpage links
+# - add History top-level item to tree
+#   . items added to history will need to use an id of filename#[uid]
+#   . & the ending #NNN... will need to be stripped for view_page
+#   . proc uid {} { return #[string range [clock clicks] end-8 end] }
+# - search for name: search the tree itself
+# - search for keyword: man -k text
+# - search for text: man -Kw text (slow)
 
 manview.tcl # VERSION
 app-1.tm
@@ -45,6 +16,7 @@ app_actions-1.tm
 about_form-1.tm
 txt-1.tm
 man-1.tm
+util-1.tm
 config-1.tm
 
 form-1.tm

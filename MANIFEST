@@ -51,6 +51,8 @@ form-1.tm
 ui-1.tm
 yes_no_box-1.tm
 
+README.md
+
 st.sh
 
 # vim: syn=yaml

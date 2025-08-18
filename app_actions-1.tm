@@ -32,7 +32,7 @@ oo::define App method on_text_select {} {
             if {$first <= $index && $index <= $last} {
                 set manpage [$View get $first $last]
                 puts "on_text_select man page '$manpage'"
-                # TODO callback with manpage
+                # TODO split
                 return
             }
         }

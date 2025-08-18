@@ -24,7 +24,7 @@ proc text_replace_ctrl_h txt {
 }
 
 proc text_apply_links txt {
-    foreach i1 [$txt search -all -regexp {\w+\(\d\)} 1.0] {
+    foreach i1 [$txt search -all -regexp {[-\w]+\(\d\)} 1.0] {
         set i2 "$i1 wordend + 3 chars"
         $txt tag add manlink $i1 $i2
     }

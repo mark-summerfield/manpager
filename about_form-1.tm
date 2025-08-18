@@ -72,7 +72,8 @@ proc about_form::populate_about_text {} {
     if {$year > 2025} { set year "2025-[string range $year end-1 end]" }
     set bits [expr {8 * $::tcl_platform(wordSize)}]
     set distro [exec lsb_release -ds]
-    # {*}$cmd "https://github.com/mark-summerfield/store\n" {center green url}
+    {*}$cmd "https://github.com/mark-summerfield/manview\n" \
+        {center green url}
     {*}$cmd "Copyright © $year Mark Summerfield.\nAll Rights Reserved.\n" \
         {center green}
     {*}$cmd "License: GPLv3.\n" {center green}

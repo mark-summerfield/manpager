@@ -12,7 +12,7 @@
 manview.tcl # VERSION
 app-1.tm
 app_ui-1.tm
-app_actions-1.tm
+app_actions-1.tm # TODO on_text_select
 about_form-1.tm
 txt-1.tm
 man-1.tm

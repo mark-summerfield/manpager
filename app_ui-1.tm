@@ -59,10 +59,8 @@ oo::define App method make_view {} {
     set right [ttk::frame .hsplit.right]
     set View [text $right.view -font Mono -undo false -wrap none]
     pack $View -fill both -expand true
-    $View tag configure bold -font MonoBold
-    $View tag configure italic -font MonoItalic
-    $View tag configure h1 -font MonoBold -foreground navy -justify center
-    $View tag configure h2 -font MonoBold -foreground darkblue
+    $View tag configure bold -font MonoBold -foreground navy
+    $View tag configure italic -font MonoItalic -foreground darkgreen
     $View tag configure manlink -foreground blue -underline true
     $View tag configure url -foreground brown -underline true
     ui::scrollize $right view both

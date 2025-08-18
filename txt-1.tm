@@ -31,18 +31,17 @@ proc text_replace_ctrl_h txt {
 }
 
 proc text_apply_styles txt {
-    foreach i [$txt search -all -regexp {[-\w]+\(\d\)} 1.0] {
+    foreach i [$txt search -all -regexp {[-\w]+\(\d\)} 2.0] {
         set j "$i wordend + 3 chars"
         $txt tag add manlink $i $j
-        puts "manlink '[$txt get $i $j]'"
     }
     foreach i [$txt search -all -regexp {https?://} 1.0] {
         set j [$txt search -regexp {[\s>]} $i]
         $txt tag add url $i $j
     }
+    set last [$txt index "end -1 line"]
     $txt tag remove manlink 1.0 1.end
     $txt tag remove url 1.0 1.end
-    set last [$txt index "end -1 line"]
     $txt tag remove manlink $last end
     $txt tag remove url $last end
     $txt tag add header 1.0 1.end

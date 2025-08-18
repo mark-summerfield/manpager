@@ -1,5 +1,10 @@
 # TODO
+# - rename git repo & locally to: manpager
+# - rename manview to manpager throughout
 # - handle manpage links
+# - end use of wishinit.tcl:
+#   . use config-1.tm and
+#   . config_form-1.tm (copy of options_form-1.tm from gravitate)
 # - add History top-level item to tree
 #   . items added to history will need to use an id of filename#[uid]
 #   . & the ending #NNN... will need to be stripped for view_page
@@ -10,7 +15,7 @@
 
 manview.tcl # VERSION
 app-1.tm
-app_ui-1.tm
+app_ui-1.tm # TODO tooltips since there's no online help
 app_actions-1.tm # TODO on_text_select
 about_form-1.tm
 txt-1.tm

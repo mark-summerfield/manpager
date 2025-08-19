@@ -1,6 +1,7 @@
 # Copyright © 2025 Mark Summerfield. All rights reserved.
 
 package require about_form
+package require config_form
 package require fileutil 1
 
 oo::define App method on_find {} {
@@ -46,9 +47,7 @@ oo::define App method on_text_select {} {
     }
 }
 
-oo::define App method on_config {} {
-    puts "TODO on_config"
-}
+oo::define App method on_config {} { ConfigForm new $Cfg }
 
 oo::define App method on_about {} { about_form::show_modal }
 

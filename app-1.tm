@@ -19,7 +19,6 @@ oo::define App constructor {} {
     tk appname Manpager
     set Cfg [Config load]
     set FindWhat apropos
-    set PageCount 0
     my make_ui
     my populate_tree
 }

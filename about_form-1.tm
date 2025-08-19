@@ -2,25 +2,26 @@
 
 package require form
 package require ui
+package require util
 
 namespace eval about_form {}
 
-proc about_form::show_modal {} {
-    make_widgets 
+proc about_form::show_modal page_count {
+    make_widgets $page_count
     make_layout
     make_bindings
     form::prepare .about { about_form::on_close }
     form::show_modal .about
 }
 
-proc about_form::make_widgets {} {
+proc about_form::make_widgets page_count {
     tk::toplevel .about
     wm title .about "[tk appname] — About"
     wm resizable .about false false
-    set height 15
+    set height 14
     tk::text .about.text -width 50 -height $height -wrap word \
-        -background "#F0F0F0" -spacing3 3
-    populate_about_text
+        -background "#F0F0F0" -spacing1 3 -spacing3 3
+    populate_about_text $page_count
     .about.text configure -state disabled
     ttk::button .about.close_button -text Close -compound left \
         -image [ui::icon close.svg $::ICON_SIZE] \
@@ -58,29 +59,30 @@ proc about_form::on_click_url index {
 proc about_form::on_close {} { form::delete .about }
 
 
-proc about_form::populate_about_text {} {
+proc about_form::populate_about_text page_count {
     set txt .about.text
     add_text_tags $txt
     set img [$txt image create end -align center \
              -image [ui::icon icon.svg 64]]
     $txt tag add spaceabove $img
     $txt tag add center $img
-    set cmd [list $txt insert end]
-    {*}$cmd "\nManpager $::VERSION\n" {center title}
-    {*}$cmd "A Unix man page viewer.\n\n" {center navy}
+    set add [list $txt insert end]
+    {*}$add "\nManpager $::VERSION\n" {center title}
+    {*}$add "A Unix man page viewer.\n" {center navy}
+    {*}$add "(Read [commas $page_count] man pages.)\n" {center gray}
     set year [clock format [clock seconds] -format %Y]
     if {$year > 2025} { set year "2025-[string range $year end-1 end]" }
     set bits [expr {8 * $::tcl_platform(wordSize)}]
     set distro [exec lsb_release -ds]
-    {*}$cmd "https://github.com/mark-summerfield/manpager\n" \
+    {*}$add "https://github.com/mark-summerfield/manpager\n" \
         {center green url}
-    {*}$cmd "Copyright © $year Mark Summerfield.\nAll Rights Reserved.\n" \
+    {*}$add "Copyright © $year Mark Summerfield.\nAll Rights Reserved.\n" \
         {center green}
-    {*}$cmd "License: GPLv3.\n" {center green}
-    {*}$cmd "[string repeat " " 60]\n" {center hr}
-    {*}$cmd "Tcl/Tk $::tcl_patchLevel (${bits}-bit)\n" center
-    if {$distro != ""} { {*}$cmd "$distro\n" center }
-    {*}$cmd "$::tcl_platform(os) $::tcl_platform(osVersion)\
+    {*}$add "License: GPLv3.\n" {center green}
+    {*}$add "[string repeat " " 60]\n" {center hr}
+    {*}$add "Tcl/Tk $::tcl_patchLevel (${bits}-bit)\n" center
+    if {$distro != ""} { {*}$add "$distro\n" center }
+    {*}$add "$::tcl_platform(os) $::tcl_platform(osVersion)\
         ($::tcl_platform(machine))\n" center
 }
 
@@ -92,6 +94,7 @@ proc about_form::add_text_tags txt {
     {*}$cmd margins -lmargin1 $margin -lmargin2 $margin -rmargin $margin
     {*}$cmd center -justify center
     {*}$cmd title -foreground navy -font H1
+    {*}$cmd gray -foreground gray
     {*}$cmd navy -foreground navy
     {*}$cmd green -foreground darkgreen
     {*}$cmd bold -font bold

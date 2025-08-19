@@ -19,7 +19,7 @@ oo::define App method on_focus_tree {} {
     focus $Tree
     set sel [$Tree selection]
     if {$sel eq ""} {
-        set sel S1 ;# TODO choose a random leaf
+        set sel S1
     }
     $Tree see $sel
     $Tree selection set $sel
@@ -57,12 +57,9 @@ oo::define App method on_config {} {
     }
 }
 
-oo::define App method on_about {} { about_form::show_modal }
+oo::define App method on_about {} { about_form::show_modal $PageCount }
 
-oo::define App method on_quit {} {
-    $Cfg save
-    exit
-}
+oo::define App method on_quit {} { $Cfg save ; exit }
 
 oo::define App method view_manlink_page manlink {
     regexp {(.*)\((\d).*} $manlink _ page section

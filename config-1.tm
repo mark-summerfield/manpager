@@ -13,7 +13,7 @@ oo::class create Config {
     variable RandomStartPage
     variable Page
     variable Path
-    variable Ok ;# used purely for config dialog
+    variable Ok ;# used purely for the config dialog
 }
 
 oo::define Config constructor {{filename ""} {geometry ""}} {

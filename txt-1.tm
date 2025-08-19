@@ -1,6 +1,7 @@
 # Copyright © 2025 Mark Summerfield. All rights reserved.
 
 proc make_fonts {family size} {
+    catch { font delete Mono MonoBold MonoItalic } ;# delete if present
     font create Mono -family $family -size $size
     font create MonoBold -family [font configure Mono -family] \
         -size $size -weight bold
@@ -23,10 +24,10 @@ proc text_replace_ctrl_h txt {
     }
     foreach {i j} [$txt tag ranges bold] {
         set word [$txt get $i $j]
-        if {[string match {-*} $word]} {
+        if {[string match {-*} $word]} { ;# -o or --option
             $txt tag remove bold $i $j
             $txt tag add option $i $j
-        } elseif {[regexp {^\d+\.0$} $i]} {
+        } elseif {[regexp {^\d+\.0$} $i]} { ;# at start of line
             $txt tag remove bold $i $j
             $txt tag add subhead $i "$i lineend"
         }

@@ -22,37 +22,41 @@ oo::define App method prepare_ui {} {
 }
 
 oo::define App method make_widgets {} {
-    set tt tooltip::tooltip
     ttk::frame .top
+    ttk::panedwindow .hsplit -orient horizontal
+    my make_controls
+    my make_tree
+    my make_view
+}
+
+oo::define App method make_controls {} {
+    set tip tooltip::tooltip
     ttk::label .top.findLabel -text Find -underline 0 -compound left \
         -image [ui::icon edit-find.svg $::ICON_SIZE]
     ttk::entry .top.findEntry
-    $tt .top.findEntry "Text to find; press Enter to start the search or\
+    $tip .top.findEntry "Text to find; press Enter to start the search or\
         F3 to continue the search."
     ttk::radiobutton .top.findApropos -text Apropos -underline 0 \
         -variable [my variable FindWhat] -value apropos
-    $tt .top.findApropos "Search man page names and short descriptions."
+    $tip .top.findApropos "Search man page names and short descriptions."
     ttk::radiobutton .top.findFreeText -text Text -underline 0 \
         -variable [my variable FindWhat] -value freetext
-    $tt .top.findFreeText "Search all man page text—slow!"
+    $tip .top.findFreeText "Search all man page text—slow!"
     ttk::radiobutton .top.findName -text Name -underline 0 \
         -variable [my variable FindWhat] -value name
-    $tt .top.findName "Search the tree of man pages."
+    $tip .top.findName "Search the tree of man pages."
     ttk::button .top.configButton -text Config… -underline 0 \
         -compound left -command [callback on_config] \
         -image [ui::icon preferences-system.svg $::MENU_ICON_SIZE]
-    $tt .top.configButton "Show configuration dialog."
+    $tip .top.configButton "Show configuration dialog."
     ttk::button .top.aboutButton -text About -underline 1 -compound left \
         -image [ui::icon about.svg $::MENU_ICON_SIZE] \
         -command [callback on_about]
-    $tt .top.aboutButton "About Manpager."
+    $tip .top.aboutButton "About Manpager."
     ttk::button .top.quitButton -text Quit -underline 0 -compound left \
         -image [ui::icon shutdown.svg $::MENU_ICON_SIZE] \
         -command [callback on_quit]
-    $tt .top.quitButton "Save config and quit."
-    ttk::panedwindow .hsplit -orient horizontal
-    my make_tree
-    my make_view
+    $tip .top.quitButton "Save config and quit."
 }
 
 oo::define App method make_tree {} {

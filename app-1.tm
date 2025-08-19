@@ -12,6 +12,7 @@ oo::class create App {
     variable FindWhat
     variable Tree
     variable View
+    variable PageCount
 }
 
 oo::define App constructor {} {
@@ -19,6 +20,7 @@ oo::define App constructor {} {
     tk appname Manpager
     set Cfg [Config load]
     set FindWhat apropos
+    set PageCount 0
     my make_ui
     my populate_tree
 }
@@ -57,6 +59,7 @@ oo::define App method populate_tree {} {
             dict set parents $grand_parent $first $parent
         }
         $Tree insert $parent end -id $filename -text $name
+        incr PageCount
     }
 }
 
@@ -74,10 +77,14 @@ oo::define App method populate_sections {} {
 }
 
 oo::define App method show_random_page {} {
-    foreach _ [lseq 5] {
+    foreach _ [lseq 9] {
         set section [lrandom [lrange [$Tree children {}] 0 end-1]]
-        set letter [lrandom [$Tree children $section]]
-        set sel [lrandom [$Tree children $letter]]
+        set letters [$Tree children $section]
+        if {[llength $letters] < 3} { continue }
+        set letter [lrandom $letters]
+        set pages [$Tree children $letter]
+        if {[llength $pages] < 3} { continue }
+        set sel [lrandom $pages]
         if {[string match /* $sel]} {
             $Tree see $sel
             $Tree selection set $sel

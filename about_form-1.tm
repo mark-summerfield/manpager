@@ -6,22 +6,22 @@ package require util
 
 namespace eval about_form {}
 
-proc about_form::show_modal page_count {
-    make_widgets $page_count
+proc about_form::show_modal {} {
+    make_widgets
     make_layout
     make_bindings
     form::prepare .about { about_form::on_close }
     form::show_modal .about
 }
 
-proc about_form::make_widgets page_count {
+proc about_form::make_widgets {} {
     tk::toplevel .about
     wm title .about "[tk appname] — About"
     wm resizable .about false false
     set height 14
     tk::text .about.text -width 50 -height $height -wrap word \
         -background "#F0F0F0" -spacing1 3 -spacing3 3
-    populate_about_text $page_count
+    populate_about_text
     .about.text configure -state disabled
     ttk::button .about.close_button -text Close -compound left \
         -image [ui::icon close.svg $::ICON_SIZE] \
@@ -59,7 +59,7 @@ proc about_form::on_click_url index {
 proc about_form::on_close {} { form::delete .about }
 
 
-proc about_form::populate_about_text page_count {
+proc about_form::populate_about_text {} {
     set txt .about.text
     add_text_tags $txt
     set img [$txt image create end -align center \
@@ -68,8 +68,7 @@ proc about_form::populate_about_text page_count {
     $txt tag add center $img
     set add [list $txt insert end]
     {*}$add "\nManpager $::VERSION\n" {center title}
-    {*}$add "A Unix man page viewer.\n" {center navy}
-    {*}$add "(Read [commas $page_count] man pages.)\n" {center gray}
+    {*}$add "A Unix man page viewer.\n\n" {center navy}
     set year [clock format [clock seconds] -format %Y]
     if {$year > 2025} { set year "2025-[string range $year end-1 end]" }
     set bits [expr {8 * $::tcl_platform(wordSize)}]

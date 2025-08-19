@@ -12,7 +12,6 @@ oo::class create App {
     variable FindWhat
     variable Tree
     variable View
-    variable PageCount
 }
 
 oo::define App constructor {} {
@@ -40,6 +39,7 @@ oo::define App method show {} {
 }
 
 oo::define App method populate_tree {} {
+    set page_count 0
     $Tree delete [$Tree children {}]
     set sections [my populate_sections]
     set parents [dict create]
@@ -59,8 +59,10 @@ oo::define App method populate_tree {} {
             dict set parents $grand_parent $first $parent
         }
         $Tree insert $parent end -id $filename -text $name
-        incr PageCount
+        incr page_count
     }
+    .hsplit.left.viewLabel configure \
+        -text "Man Pages ([commas $page_count])"
 }
 
 oo::define App method populate_sections {} {

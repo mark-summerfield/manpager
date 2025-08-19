@@ -57,7 +57,7 @@ oo::define App method on_config {} {
     }
 }
 
-oo::define App method on_about {} { about_form::show_modal $PageCount }
+oo::define App method on_about {} { about_form::show_modal }
 
 oo::define App method on_quit {} { $Cfg save ; exit }
 

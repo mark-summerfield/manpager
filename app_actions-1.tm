@@ -47,7 +47,12 @@ oo::define App method on_text_select {} {
     }
 }
 
-oo::define App method on_config {} { ConfigForm new $Cfg }
+oo::define App method on_config {} {
+    puts "\nBEFORE [$Cfg to_string]" ;#TODO delete
+    ConfigForm new $Cfg
+    tkwait window .config ;# TODO delete
+    puts "AFTER  [$Cfg to_string]" ;#TODO delete
+}
 
 oo::define App method on_about {} { about_form::show_modal }
 

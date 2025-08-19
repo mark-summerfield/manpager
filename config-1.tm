@@ -117,7 +117,8 @@ oo::define Config method randomstartpage {{randomstartpage ""}} {
 }
 
 oo::define Config method to_string {} {
-    return "Config filename=$Filename geometry=$Geometry\
+    return "Config filename=$Filename blinking=$Blinking\
+        scaling=[tk scaling] geometry=$Geometry\
         fontsize=$FontSize page=$Page path=$Path\
         randomstartPage=$RandomStartPage"
 }

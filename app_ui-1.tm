@@ -39,9 +39,8 @@ oo::define App method make_widgets {} {
         -variable [my variable FindWhat] -value name
     $tt .top.findName "Search the tree of man pages."
     ttk::button .top.configButton -text Config… -underline 0 \
-        -compound left \
-        -image [ui::icon preferences-system.svg $::MENU_ICON_SIZE] \
-        -command [callback on_config]
+        -compound left -command [callback on_config] \
+        -image [ui::icon preferences-system.svg $::MENU_ICON_SIZE]
     $tt .top.configButton "Show configuration dialog."
     ttk::button .top.aboutButton -text About -underline 1 -compound left \
         -image [ui::icon about.svg $::MENU_ICON_SIZE] \
@@ -88,14 +87,15 @@ oo::define App method make_view {} {
 }
 
 oo::define App method make_layout {} {
-    pack .top.findLabel -side left -pady 3 -padx 3
+    const opts "-pady 3 -padx 3"
+    pack .top.findLabel -side left {*}$opts
     pack .top.findEntry -fill x -expand true -side left
     pack .top.findApropos -side left
     pack .top.findFreeText -side left
     pack .top.findName -side left
-    pack .top.quitButton -side right -pady 3 -padx 3
-    pack .top.aboutButton -side right -pady 3 -padx 3
-    pack .top.configButton -side right -pady 3 -padx 3
+    pack .top.quitButton -side right {*}$opts
+    pack .top.aboutButton -side right {*}$opts
+    pack .top.configButton -side right {*}$opts
     grid .top -row 0 -column 0 -sticky we
     grid .hsplit -row 1 -column 0 -sticky news
     grid rowconfigure . 1 -weight 1

@@ -25,7 +25,10 @@ proc text_replace_ctrl_h txt {
         set word [$txt get $i $j]
         if {[string match {-*} $word]} {
             $txt tag remove bold $i $j
-            $txt tag add boldopt $i $j
+            $txt tag add option $i $j
+        } elseif {[regexp {^\d+\.0$} $i]} {
+            $txt tag remove bold $i $j
+            $txt tag add subhead $i "$i lineend"
         }
     }
 }

@@ -15,10 +15,10 @@ oo::class create App {
 }
 
 oo::define App constructor {} {
-    set FindWhat apropos
     ui::wishinit
     tk appname Manpager
     set Cfg [Config load]
+    set FindWhat apropos
     my make_ui
     my populate_tree
 }
@@ -30,7 +30,11 @@ oo::define App method show {} {
     raise .
     update
     set page [$Cfg page]  
-    if {$page ne ""} { my view_page $page }
+    if {$page eq "" || [$Cfg randomstartpage]} {
+        my show_random_page
+    } else {
+        my view_page $page
+    }
 }
 
 oo::define App method populate_tree {} {
@@ -67,4 +71,18 @@ oo::define App method populate_sections {} {
             [$Tree insert {} end -id S8 -text "8 Sysadmin (root)"] \
             [$Tree insert {} end -id S9 -text "9 Kernel routines"] \
             [$Tree insert {} end -id Found -text "Found"]
+}
+
+oo::define App method show_random_page {} {
+    foreach _ [lseq 5] {
+        set section [lrandom [lrange [$Tree children {}] 0 end-1]]
+        set letter [lrandom [$Tree children $section]]
+        set sel [lrandom [$Tree children $letter]]
+        if {[string match /* $sel]} {
+            $Tree see $sel
+            $Tree selection set $sel
+            $Tree focus $sel
+            break
+        }
+    }
 }

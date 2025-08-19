@@ -1,19 +1,15 @@
 # Copyright © 2025 Mark Summerfield. All rights reserved.
 
+package require autoscroll 1
+
 namespace eval ui {}
 
 proc ui::wishinit {} {
-    catch {
-        set fh [open [file join [file home] .wishinit.tcl]]
-        set raw [read $fh]
-        close $fh
-        eval $raw
-    }
+    option add *tearOff 0
+    ttk::style theme use clam
     const ::LINEHEIGHT [expr {[font metrics font -linespace] * 1.0125}]
     ttk::style configure Treeview -rowheight $::LINEHEIGHT
-    set font [font create -family [font actual TkDefaultFont -family] \
-                -size [font actual TkDefaultFont -size]]
-    ttk::style configure Treeview.Heading -font $font
+    ttk::style configure Treeview.Heading -font TkDefaultFont
     ttk::style configure TCheckbutton -indicatorsize \
         [expr {$::LINEHEIGHT * 0.75}]
     set ::ICON_SIZE [expr {max(24, round(20 * [tk scaling]))}]
@@ -95,8 +91,6 @@ proc ui::human_size {value {suffix B}} {
 #    ui::scrollize $frame $name vertical
 #  
 proc ui::scrollize {frame name which} {
-    package require autoscroll 1
-
     grid $frame.$name -row 0 -column 0 -sticky news
     if {$which eq "vertical" || $which eq "both"} {
         $frame.$name configure -yscrollcommand "$frame.scrolly set"

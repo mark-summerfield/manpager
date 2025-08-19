@@ -1,5 +1,4 @@
 # TODO
-# - handle manpage links
 # - end use of wishinit.tcl:
 #   . use config-1.tm and
 #   . config_form-1.tm (copy of options_form-1.tm from gravitate)
@@ -7,14 +6,16 @@
 #   . items added to history will need to use an id of filename#[uid]
 #   . & the ending #NNN... will need to be stripped for view_page
 #   . proc uid {} { return #[string range [clock clicks] end-8 end] }
-# - search for name: search the tree itself
-# - search for keyword: man -k text
-# - search for text: man -Kw text (slow)
+# - implement searches:
+#   . delete Found subtree & add new Found subtree
+#	. name: search the tree itself in the current section (see view_manlink_page)
+#	. keyword: man -k text
+# 	. text: man -Kw text (slow)
 
 manpager.tcl # VERSION
 app-1.tm
-app_ui-1.tm # TODO tooltips since there's no online help
-app_actions-1.tm # TODO on_text_select
+app_ui-1.tm
+app_actions-1.tm # TODO on_config
 about_form-1.tm
 txt-1.tm
 man-1.tm

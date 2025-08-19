@@ -1,6 +1,7 @@
 # Copyright © 2025 Mark Summerfield. All rights reserved.
 
 package require autoscroll 1
+package require tooltip 2
 package require txt
 package require ui
 
@@ -21,22 +22,35 @@ oo::define App method prepare_ui {} {
 }
 
 oo::define App method make_widgets {} {
+    set tt tooltip::tooltip
     ttk::frame .top
     ttk::label .top.findLabel -text Find -underline 0 -compound left \
         -image [ui::icon edit-find.svg $::ICON_SIZE]
     ttk::entry .top.findEntry
+    $tt .top.findEntry "Text to find; press Enter to start the search or\
+        F3 to continue the search."
     ttk::radiobutton .top.findApropos -text Apropos -underline 0 \
         -variable [my variable FindWhat] -value apropos
+    $tt .top.findApropos "Search man page names and short descriptions."
     ttk::radiobutton .top.findFreeText -text Text -underline 0 \
         -variable [my variable FindWhat] -value freetext
+    $tt .top.findFreeText "Search all man page text—slow!"
     ttk::radiobutton .top.findName -text Name -underline 0 \
         -variable [my variable FindWhat] -value name
+    $tt .top.findName "Search the tree of man pages."
+    ttk::button .top.configButton -text Config… -underline 0 \
+        -compound left \
+        -image [ui::icon preferences-system.svg $::MENU_ICON_SIZE] \
+        -command [callback on_config]
+    $tt .top.configButton "Show configuration dialog."
     ttk::button .top.aboutButton -text About -underline 1 -compound left \
         -image [ui::icon about.svg $::MENU_ICON_SIZE] \
         -command [callback on_about]
+    $tt .top.aboutButton "About Manpager."
     ttk::button .top.quitButton -text Quit -underline 0 -compound left \
         -image [ui::icon shutdown.svg $::MENU_ICON_SIZE] \
         -command [callback on_quit]
+    $tt .top.quitButton "Save config and quit."
     ttk::panedwindow .hsplit -orient horizontal
     my make_tree
     my make_view
@@ -59,14 +73,15 @@ oo::define App method make_view {} {
     set right [ttk::frame .hsplit.right]
     set View [text $right.view -font Mono -undo false -wrap none]
     pack $View -fill both -expand true
-    $View tag configure header -foreground navy -background lightcyan \
+    $View tag configure header -foreground darkblue -background lightcyan \
         -underline false
     $View tag configure footer -foreground gray25 -background gray85 \
         -underline false
-    $View tag configure bold -font MonoBold -foreground darkblue
-    $View tag configure boldopt -font MonoBold -foreground darkgreen
-    $View tag configure italic -font MonoItalic -foreground darkgreen
-    $View tag configure manlink -foreground blue -underline true
+    $View tag configure bold -font MonoBold -foreground blue
+    $View tag configure option -font MonoBold -foreground green
+    $View tag configure subhead -font MonoBold -foreground navy
+    $View tag configure italic -font MonoItalic -foreground green
+    $View tag configure manlink -foreground darkcyan -underline true
     $View tag configure url -foreground brown -underline true
     ui::scrollize $right view both
     .hsplit add $right
@@ -80,6 +95,7 @@ oo::define App method make_layout {} {
     pack .top.findName -side left
     pack .top.quitButton -side right -pady 3 -padx 3
     pack .top.aboutButton -side right -pady 3 -padx 3
+    pack .top.configButton -side right -pady 3 -padx 3
     grid .top -row 0 -column 0 -sticky we
     grid .hsplit -row 1 -column 0 -sticky news
     grid rowconfigure . 1 -weight 1
@@ -93,6 +109,7 @@ oo::define App method make_bindings {} {
     bind . <F3> [callback on_find]
     bind . <Alt-a> {.top.findApropos invoke}
     bind . <Alt-b> [callback on_about]
+    bind . <Alt-c> [callback on_config]
     bind . <Alt-f> {focus .top.findEntry}
     bind . <Alt-m> [callback on_focus_tree]
     bind . <Alt-n> {.top.findName invoke}

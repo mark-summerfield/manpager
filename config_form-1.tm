@@ -11,6 +11,7 @@ oo::class create ConfigForm {
 
 oo::define ConfigForm constructor cfg {
     set Cfg $cfg
+    $Cfg ok false
     my make_widgets 
     my make_layout
     my make_bindings
@@ -102,7 +103,7 @@ oo::define ConfigForm method on_font_chosen args {
 oo::define ConfigForm method on_ok {} {
     tk scaling [.config.scaleSpinbox get]
     $Cfg blinking $Blinking
-    puts "TODO on_ok: save config"
+    $Cfg ok true
     form::delete .config
 }
 

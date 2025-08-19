@@ -13,6 +13,7 @@ oo::class create Config {
     variable RandomStartPage
     variable Page
     variable Path
+    variable Ok ;# used purely for config dialog
 }
 
 oo::define Config constructor {{filename ""} {geometry ""}} {
@@ -24,6 +25,7 @@ oo::define Config constructor {{filename ""} {geometry ""}} {
     set RandomStartPage true
     set Page ""
     set Path /usr/share/man
+    set Ok false
 }
 
 oo::define Config classmethod load {} {
@@ -116,9 +118,14 @@ oo::define Config method randomstartpage {{randomstartpage ""}} {
     return $RandomStartPage
 }
 
+oo::define Config method ok {{ok ""}} {
+    if {$ok ne ""} { set Ok $ok }
+    return $Ok
+}
+
 oo::define Config method to_string {} {
     return "Config filename=$Filename blinking=$Blinking\
         scaling=[tk scaling] geometry=$Geometry\
         fontsize=$FontSize page=$Page path=$Path\
-        randomstartPage=$RandomStartPage"
+        randomstartPage=$RandomStartPage ok=$Ok"
 }

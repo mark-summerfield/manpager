@@ -50,8 +50,11 @@ oo::define App method on_text_select {} {
 oo::define App method on_config {} {
     puts "\nBEFORE [$Cfg to_string]" ;#TODO delete
     ConfigForm new $Cfg
-    tkwait window .config ;# TODO delete
-    puts "AFTER  [$Cfg to_string]" ;#TODO delete
+    tkwait window .config
+    if {[$Cfg ok]} {
+        puts "AFTER  [$Cfg to_string]" ;#TODO delete
+        #TODO apply updates?
+    }
 }
 
 oo::define App method on_about {} { about_form::show_modal }

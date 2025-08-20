@@ -13,7 +13,7 @@ oo::define AboutForm constructor {} {
     my make_layout
     my make_bindings
     next .about [callback on_close]
-    my show_modal .about
+    my show_modal .about.closeButton
 }
 
 oo::define AboutForm method make_widgets {} {
@@ -25,14 +25,14 @@ oo::define AboutForm method make_widgets {} {
         -background "#F0F0F0" -spacing1 3 -spacing3 3
     my Populate
     .about.text configure -state disabled
-    ttk::button .about.close_button -text Close -compound left \
+    ttk::button .about.closeButton -text Close -compound left \
         -image [ui::icon close.svg $::ICON_SIZE] \
         -command [callback on_close]
 }
 
 oo::define AboutForm method make_layout {} {
     grid .about.text -sticky nsew -pady 3
-    grid .about.close_button -pady 3
+    grid .about.closeButton -pady 3
 }
 
 oo::define AboutForm method make_bindings {} {

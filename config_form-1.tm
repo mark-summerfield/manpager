@@ -28,7 +28,7 @@ oo::define ConfigForm constructor {ok cfg} {
     my make_layout
     my make_bindings
     next .config [callback on_cancel]
-    my show_modal .config
+    my show_modal .config.scaleSpinbox
 }
 
 oo::define ConfigForm method make_widgets {} {

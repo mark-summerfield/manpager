@@ -73,8 +73,7 @@ oo::define App method populate_sections {} {
             [$Tree insert {} end -id S6 -text "6 Games"] \
             [$Tree insert {} end -id S7 -text "7 Miscellaneous"] \
             [$Tree insert {} end -id S8 -text "8 Sysadmin (root)"] \
-            [$Tree insert {} end -id S9 -text "9 Kernel routines"] \
-            [$Tree insert {} end -id Found -text "Found"]
+            [$Tree insert {} end -id S9 -text "9 Kernel routines"]
 }
 
 oo::define App method show_random_page {} {

@@ -4,47 +4,42 @@ package require form
 package require ui
 package require util
 
-namespace eval about_form {}
+oo::class create AboutForm {}
 
-proc about_form::show_modal {} {
-    make_widgets
-    make_layout
-    make_bindings
-    form::prepare .about { about_form::on_close }
+oo::define AboutForm constructor {} {
+    my make_widgets
+    my make_layout
+    my make_bindings
+    form::prepare .about [callback on_close]
     form::show_modal .about
 }
 
-proc about_form::make_widgets {} {
+oo::define AboutForm method make_widgets {} {
     tk::toplevel .about
     wm title .about "[tk appname] — About"
     wm resizable .about false false
-    set height 14
+    set height 15
     tk::text .about.text -width 50 -height $height -wrap word \
         -background "#F0F0F0" -spacing1 3 -spacing3 3
-    populate_about_text
+    my Populate
     .about.text configure -state disabled
     ttk::button .about.close_button -text Close -compound left \
         -image [ui::icon close.svg $::ICON_SIZE] \
-        -command { about_form::on_close }
+        -command [callback on_close]
 }
 
-
-proc about_form::make_layout {} {
+oo::define AboutForm method make_layout {} {
     grid .about.text -sticky nsew -pady 3
     grid .about.close_button -pady 3
 }
 
-
-proc about_form::make_bindings {} {
-    bind .about <Escape> { about_form::on_close }
-    bind .about <Return> { about_form::on_close }
-    .about.text tag bind url <Double-1> {
-        about_form::on_click_url @%x,%y
-    }
+oo::define AboutForm method make_bindings {} {
+    bind .about <Escape> [callback on_close]
+    bind .about <Return> [callback on_close]
+    .about.text tag bind url <Double-1> [callback on_click_url @%x,%y]
 }
 
-
-proc about_form::on_click_url index {
+oo::define AboutForm method on_click_url index {
     set indexes [.about.text tag prevrange url $index]
     set url [string trim [.about.text get {*}$indexes]]
     if {$url ne ""} {
@@ -55,13 +50,11 @@ proc about_form::on_click_url index {
     }
 }
 
+oo::define AboutForm method on_close {} { form::delete .about }
 
-proc about_form::on_close {} { form::delete .about }
-
-
-proc about_form::populate_about_text {} {
+oo::define AboutForm method Populate {} {
     set txt .about.text
-    add_text_tags $txt
+    my AddTextTags $txt
     set img [$txt image create end -align center \
              -image [ui::icon icon.svg 64]]
     $txt tag add spaceabove $img
@@ -85,7 +78,7 @@ proc about_form::populate_about_text {} {
         ($::tcl_platform(machine))\n" center
 }
 
-proc about_form::add_text_tags txt {
+oo::define AboutForm method AddTextTags txt {
     set margin 12
     $txt configure -font TkTextFont
     set cmd [list $txt tag configure]

@@ -48,16 +48,24 @@ oo::define App method on_text_select {} {
 }
 
 oo::define App method on_config {} {
-    puts "\nBEFORE [$Cfg to_string]" ;#TODO delete
-    ConfigForm new $Cfg
+    set ok [Ref new false]
+    set fontfamily [$Cfg fontfamily]
+    set fontsize [$Cfg fontsize]
+    set path [$Cfg path]
+    ConfigForm new $ok $Cfg
     tkwait window .config
-    if {[$Cfg ok]} {
-        puts "AFTER  [$Cfg to_string]" ;#TODO delete
-        #TODO apply updates?
+    if {[$ok get]} {
+        if {$fontfamily ne [$Cfg fontfamily] || \
+                $fontsize != [$Cfg fontsize]} {
+            make_fonts [$Cfg fontfamily] [$Cfg fontsize]
+        }
+        if {$path ne [$Cfg path]} {
+            my populate_tree
+        }
     }
 }
 
-oo::define App method on_about {} { about_form::show_modal }
+oo::define App method on_about {} { AboutForm new }
 
 oo::define App method on_quit {} { $Cfg save ; exit }
 
@@ -83,7 +91,7 @@ oo::define App method view_manlink_page manlink {
 }
 
 oo::define App method view_page filename {
-    $Cfg page $filename
+    $Cfg set_page $filename
     set fh [open |[list man -Tutf8 $filename]]
     try {
         try {

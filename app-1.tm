@@ -57,8 +57,10 @@ oo::define App method populate_tree {} {
             set parent [$Tree insert $grand_parent end -text $first]
             dict set parents $grand_parent $first $parent
         }
-        $Tree insert $parent end -id $filename -text $name
-        incr page_count
+        if {$name ne "\["} {
+            $Tree insert $parent end -id $filename -text $name\($section\)
+            incr page_count
+        }
     }
     .hsplit.left.viewLabel configure \
         -text "Man Pages ([commas $page_count])"

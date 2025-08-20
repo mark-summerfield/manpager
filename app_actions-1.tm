@@ -70,7 +70,7 @@ oo::define App method on_about {} { AboutForm new }
 oo::define App method on_quit {} { $Cfg save ; exit }
 
 oo::define App method view_manlink_page manlink {
-    regexp {(.*)\((\d).*} $manlink _ page section
+    regexp {(.*)\((\d).*} [string tolower $manlink] _ page section
     set section S$section
     set letter [string index $page 0]
     if {[string is alpha $letter]} {

@@ -8,8 +8,8 @@ oo::class create Config {
     variable Filename
     variable Blinking
     variable Geometry
-    variable FontSize
     variable FontFamily
+    variable FontSize
     variable RandomStartPage
     variable Path
     variable Page
@@ -19,8 +19,8 @@ oo::define Config constructor {{filename ""} {geometry ""}} {
     set Filename $filename
     set Blinking true
     set Geometry $geometry
-    set FontSize [expr {2 + [font configure TkFixedFont -size]}]
     set FontFamily [font configure TkFixedFont -family]
+    set FontSize [expr {2 + [font configure TkFixedFont -size]}]
     set RandomStartPage true
     set Path /usr/share/man
     set Page ""
@@ -42,10 +42,10 @@ oo::define Config classmethod load {} {
             }
             $config set_geometry [ini::value $ini General Geometry \
                 [$config geometry]]
-            $config set_fontsize [ini::value $ini General FontSize \
-                [$config fontsize]]
             $config set_fontfamily [ini::value $ini General FontFamily \
                 [$config fontfamily]]
+            $config set_fontsize [ini::value $ini General FontSize \
+                [$config fontsize]]
             $config set_randomstartpage [ini::value $ini General \
                 RandomStartPage [$config randomstartpage]]
             $config set_path [ini::value $ini General Path [$config path]]
@@ -65,8 +65,8 @@ oo::define Config method save {} {
         ini::set $ini General Scale [tk scaling]
         ini::set $ini General Blinking [my blinking]
         ini::set $ini General Geometry [wm geometry .]
-        ini::set $ini General FontSize [my fontsize]
         ini::set $ini General FontFamily [my fontfamily]
+        ini::set $ini General FontSize [my fontsize]
         ini::set $ini General RandomStartPage [my randomstartpage]
         ini::set $ini General Path [my path]
         ini::set $ini General Page [my page]

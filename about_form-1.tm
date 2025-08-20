@@ -4,14 +4,16 @@ package require form
 package require ui
 package require util
 
-oo::class create AboutForm {}
+oo::class create AboutForm {
+    superclass Form
+}
 
 oo::define AboutForm constructor {} {
     my make_widgets
     my make_layout
     my make_bindings
-    form::prepare .about [callback on_close]
-    form::show_modal .about
+    next .about [callback on_close]
+    my show_modal .about
 }
 
 oo::define AboutForm method make_widgets {} {
@@ -50,7 +52,7 @@ oo::define AboutForm method on_click_url index {
     }
 }
 
-oo::define AboutForm method on_close {} { form::delete .about }
+oo::define AboutForm method on_close {} { my delete }
 
 oo::define AboutForm method Populate {} {
     set txt .about.text

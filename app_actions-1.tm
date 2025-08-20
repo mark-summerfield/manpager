@@ -5,7 +5,9 @@ package require config_form
 package require fileutil 1
 
 oo::define App method on_find {} {
-    puts "TODO on_find"
+    foreach match [exec man -k {*}[$FindEntry get]] {
+        puts $match ;# TODO
+    }
 }
 
 oo::define App method on_tree_select {} {

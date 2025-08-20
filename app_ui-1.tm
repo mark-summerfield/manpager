@@ -33,7 +33,7 @@ oo::define App method make_controls {} {
     set tip tooltip::tooltip
     ttk::label .top.findLabel -text Find -underline 0 -compound left \
         -image [ui::icon edit-find.svg $::ICON_SIZE]
-    ttk::entry .top.findEntry
+    set FindEntry [ttk::entry .top.findEntry]
     $tip .top.findEntry "Text to find; press Enter to start the search or\
         F3 to continue the search."
     ttk::radiobutton .top.findApropos -text Apropos -underline 0 \

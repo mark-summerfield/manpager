@@ -1,10 +1,11 @@
 # Copyright © 2025 Mark Summerfield. All rights reserved.
 
-oo::class create Form {
+oo::abstract create AbstractForm {
     variable Window
 }
 
-oo::define Form constructor {window on_close {modal true} {x 0} {y 0}} {
+oo::define AbstractForm constructor {window on_close {modal true} \
+        {x 0} {y 0}} {
     set Window $window
     wm withdraw $Window
     wm attributes $Window -type dialog
@@ -21,7 +22,7 @@ oo::define Form constructor {window on_close {modal true} {x 0} {y 0}} {
     wm protocol $Window WM_DELETE_WINDOW $on_close
 }
 
-oo::define Form method show_modal {{focus_widget ""}} {
+oo::define AbstractForm method show_modal {{focus_widget ""}} {
     wm deiconify $Window
     grab set $Window
     raise $Window
@@ -30,19 +31,19 @@ oo::define Form method show_modal {{focus_widget ""}} {
     if {$focus_widget ne ""} { focus $focus_widget }
 }
 
-oo::define Form method show_modeless {} {
+oo::define AbstractForm method show_modeless {} {
     wm deiconify $Window
     raise $Window
     update
     focus $Window
 }
 
-oo::define Form method delete {} {
+oo::define AbstractForm method delete {} {
     grab release $Window
     destroy $Window
 }
 
-oo::define Form method hide {} {
+oo::define AbstractForm method hide {} {
     grab release $Window
     wm withdraw $Window
 }

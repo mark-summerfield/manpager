@@ -5,7 +5,7 @@ package require ui
 package require util
 
 oo::class create AboutForm {
-    superclass Form
+    superclass AbstractForm
 }
 
 oo::define AboutForm constructor {} {

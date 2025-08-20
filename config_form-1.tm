@@ -5,7 +5,7 @@ package require tooltip 2
 package require ui
 
 oo::class create ConfigForm {
-    superclass Form
+    superclass AbstractForm
 
     variable Cfg
     variable Blinking

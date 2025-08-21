@@ -13,6 +13,7 @@ oo::class create App {
     variable Tree
     variable View
     variable FindEntry
+    variable Found
 }
 
 oo::define App constructor {} {

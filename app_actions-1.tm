@@ -5,14 +5,57 @@ package require config_form
 package require fileutil 1
 
 oo::define App method on_find {} {
-    foreach match [exec man -k {*}[$FindEntry get]] {
-        puts $match ;# TODO
+    catch {$Tree delete Found}
+    $Tree insert {} end -id Found -text Found
+    switch $FindWhat {
+        apropos {set found [my on_find_apropos]}
+        freetext {set found [my on_find_freetext]}
+        name {set found [my on_find_name]}
     }
+    set Found [list "Found man pages\n"]
+    lappend Found {*}[lsort -dictionary -unique $found]
+    lappend Found "_\n"
+    $Tree see Found
+    $Tree selection set Found
+    $Tree focus Found
+    my view_page Found
+}
+
+oo::define App method on_find_apropos {} {
+    set found [list]
+    set lines [exec -encoding utf-8 -- man -k {*}[$FindEntry get]]
+    foreach line [split $lines \n] {
+        set parts [split $line]
+        if {[llength $parts] > 2} {
+            set manpage [lindex $parts 0][lindex $parts 1]
+            set desc [string trimleft [string trimleft [string trim \
+                [join [lrange $parts 2 end] " "]] -]]
+            lappend found "• $manpage\t$desc\n"
+        }
+    }
+    return $found
+}
+
+oo::define App method on_find_freetext {} {
+    set found [list]
+    set filenames [exec -encoding utf-8 -- man -Kw {*}[$FindEntry get]]
+    foreach filename [split $filenames \n] {
+        regexp {^(.*)\.(\d).*?(?:\.gz)?$} [file tail $filename] _ name sect
+        if {[info exists name] && [info exists sect]} {
+            set manlink $name\($sect\)
+            lappend found "• $manlink\n"
+        }
+    }
+    return $found
+}
+
+oo::define App method on_find_name {} {
+    puts on_find_name
 }
 
 oo::define App method on_tree_select {} {
     set sel [$Tree selection]
-    if {[string match /* $sel]} {
+    if {$sel eq "Found" || [string match /* $sel]} {
         my view_page $sel
     }
 }
@@ -73,6 +116,7 @@ oo::define App method on_quit {} { $Cfg save ; exit }
 
 oo::define App method view_manlink_page manlink {
     regexp {(.*)\((\d).*} [string tolower $manlink] _ page section
+    if {![info exists page] || ![info exists section]} { return }
     set section S$section
     set letter [string index $page 0]
     if {[string is alpha $letter]} {
@@ -93,17 +137,21 @@ oo::define App method view_manlink_page manlink {
 }
 
 oo::define App method view_page filename {
-    $Cfg set_page $filename
-    set fh [open |[list man -Tutf8 $filename]]
-    try {
+    if {$filename eq "Found"} {
+        set man [join $Found ""]
+    } else {
+        $Cfg set_page $filename
+        set fh [open |[list man -Tutf8 $filename]]
         try {
-            fconfigure $fh -encoding utf-8
-            set man [read $fh]
-        } finally {
-            close $fh
+            try {
+                fconfigure $fh -encoding utf-8
+                set man [read $fh]
+            } finally {
+                close $fh
+            }
+        } on error err {
+            puts "error running 'man -Tutf8 $filename': $err"
         }
-    } on error err {
-        puts "error running 'man -Tutf8 $filename': $err"
     }
     $View delete 1.0 end
     $View insert end [string trimright $man]

@@ -37,13 +37,13 @@ oo::define App method make_controls {} {
     $tip .top.findEntry "Text to find; press Enter to start the search or\
         F3 to continue the search."
     ttk::radiobutton .top.findApropos -text Apropos -underline 0 \
-        -variable [my variable FindWhat] -value apropos
+        -variable [my varname FindWhat] -value apropos
     $tip .top.findApropos "Search man page names and short descriptions."
     ttk::radiobutton .top.findFreeText -text Text -underline 0 \
-        -variable [my variable FindWhat] -value freetext
+        -variable [my varname FindWhat] -value freetext
     $tip .top.findFreeText "Search all man page text—slow!"
     ttk::radiobutton .top.findName -text Name -underline 0 \
-        -variable [my variable FindWhat] -value name
+        -variable [my varname FindWhat] -value name
     $tip .top.findName "Search the tree of man pages."
     ttk::button .top.configButton -text Config… -underline 0 \
         -compound left -command [callback on_config] \
@@ -74,7 +74,7 @@ oo::define App method make_tree {} {
 
 oo::define App method make_view {} {
     set right [ttk::frame .hsplit.right]
-    set View [text $right.view -font Mono -undo false -wrap none]
+    set View [text $right.view -font Mono -undo false -wrap none -tabs 1i]
     pack $View -fill both -expand true
     $View tag configure header -foreground darkblue -background lightcyan \
         -underline false

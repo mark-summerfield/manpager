@@ -1,9 +1,7 @@
 # TODO
 # - implement searches:
-#   . delete Found subtree if exists & add new Found subtree
-#	. name: search the tree itself in the current section (see view_manlink_page)
-#	. keyword: man -k text
-# 	. text: man -Kw text (slow)
+#   . name: search the tree itself in the current section (see view_manlink_page)
+#   . text: man -Kw text (slow)
 
 manpager.tcl # VERSION
 app-1.tm

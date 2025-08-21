@@ -204,21 +204,18 @@ oo::define App method update_history filename {
     set manlink [man_link_for_filename $filename]
     if {$manlink ne ""} {
         set past [$Tree children History]
-        set found false
-        foreach item $past {
-            set past_manlink [man_link_for_filename $item]
-            if {$past_manlink eq $manlink} {
-                set found true
-                break
-            }
-        }
         $Tree delete $past
-        if {!$found} {
-            set past [linsert $past 0 $filename[uid]]
-        }
-        foreach filename $past {
-            puts $filename
-            $Tree insert History end -id $filename -text $manlink
+        $Tree insert History end -id $filename#0 -text $manlink]
+        set n 1
+        foreach name $past {
+            set name [regsub {#\d+$} $name ""]
+            if {$name ne $filename} {
+                set manlink [man_link_for_filename $name]
+                if {$manlink ne ""} {
+                    $Tree insert History end -id $name#$n -text $manlink
+                    incr n
+                }
+            }
         }
     }
 }

@@ -12,7 +12,7 @@ package require app
 package require app_actions
 package require app_ui
 
-const VERSION 0.8.0
+const VERSION 1.0.0
 
 set app [App new]
 $app show

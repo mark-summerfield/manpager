@@ -34,8 +34,9 @@ oo::define App method make_controls {} {
     ttk::label .top.findLabel -text Find -underline 0 -compound left \
         -image [ui::icon edit-find.svg $::ICON_SIZE]
     set FindEntry [ttk::entry .top.findEntry]
-    $tip .top.findEntry "Text to find; press Enter to start the search or\
-        F3 to continue the search."
+    $tip .top.findEntry "Word to find.\n\Press\
+        Enter to start the search\nor F3 to do or redo the search\n(e.g.,\
+        after clicking a radio button)."
     ttk::radiobutton .top.findApropos -text Apropos -underline 0 \
         -variable [my varname FindWhat] -value apropos
     $tip .top.findApropos "Search man page names and short descriptions."
@@ -74,7 +75,7 @@ oo::define App method make_tree {} {
 
 oo::define App method make_view {} {
     set right [ttk::frame .hsplit.right]
-    set View [text $right.view -font Mono -undo false -wrap none -tabs 1i]
+    set View [text $right.view -font Mono -undo false -wrap none -tabs 2i]
     pack $View -fill both -expand true
     $View tag configure header -foreground darkblue -background lightcyan \
         -underline false
@@ -86,6 +87,8 @@ oo::define App method make_view {} {
     $View tag configure italic -font MonoItalic -foreground green
     $View tag configure manlink -foreground darkcyan -underline true
     $View tag configure url -foreground brown -underline true
+    $View tag configure stripe -background gray90
+    $View tag configure special -foreground gray85 -background gray85
     ui::scrollize $right view both
     .hsplit add $right
 }

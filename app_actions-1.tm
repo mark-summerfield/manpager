@@ -3,34 +3,45 @@
 package require about_form
 package require config_form
 package require fileutil 1
+package require ui
 
 oo::define App method on_find {} {
-    catch {$Tree delete Found}
-    $Tree insert {} end -id Found -text Found
-    switch $FindWhat {
-        apropos {set found [my on_find_apropos]}
-        freetext {set found [my on_find_freetext]}
-        name {set found [my on_find_name]}
+    tk busy .
+    update
+    try {
+        catch {$Tree delete Found}
+        $Tree insert {} end -id Found -text Found
+        switch $FindWhat {
+            apropos {set found [my on_find_apropos]}
+            freetext {set found [my on_find_freetext]}
+            name {set found [my on_find_name]}
+        }
+        lassign [ui::n_s [llength $found]] n s
+        set Found [list "Found $n man page$s\n"]
+        lappend Found {*}[lsort -dictionary -unique $found]
+        lappend Found "_\n"
+        $Tree see Found
+        $Tree selection set Found
+        $Tree focus Found
+        my view_page Found
+    } finally {
+        tk busy forget .
+        update
     }
-    set Found [list "Found man pages\n"]
-    lappend Found {*}[lsort -dictionary -unique $found]
-    lappend Found "_\n"
-    $Tree see Found
-    $Tree selection set Found
-    $Tree focus Found
-    my view_page Found
 }
 
 oo::define App method on_find_apropos {} {
     set found [list]
-    set lines [exec -encoding utf-8 -- man -k {*}[$FindEntry get]]
-    foreach line [split $lines \n] {
-        set parts [split $line]
-        if {[llength $parts] > 2} {
-            set manpage [lindex $parts 0][lindex $parts 1]
-            set desc [string trimleft [string trimleft [string trim \
-                [join [lrange $parts 2 end] " "]] -]]
-            lappend found "• $manpage\t$desc\n"
+    catch {
+        set lines [exec -encoding utf-8 -- man -k {*}[$FindEntry get]]
+        foreach line [split $lines \n] {
+            set parts [split $line]
+            if {[llength $parts] > 2} {
+                set manpage [lindex $parts 0][lindex $parts 1]
+                set desc [string trimleft [string trim \
+                    [join [lrange $parts 2 end] " "]] " -"]
+                lappend found "• $manpage\t$desc\n"
+            }
         }
     }
     return $found
@@ -38,11 +49,13 @@ oo::define App method on_find_apropos {} {
 
 oo::define App method on_find_freetext {} {
     set found [list]
-    set filenames [exec -encoding utf-8 -- man -Kw {*}[$FindEntry get]]
-    foreach filename [split $filenames \n] {
-        set manlink [man_link_for_filename $filename]
-        if {$manlink ne ""} {
-            lappend found "• $manlink\n"
+    catch {
+        set filenames [exec -encoding utf-8 -- man -Kw {*}[$FindEntry get]]
+        foreach filename [split $filenames \n] {
+            set manlink [man_link_for_filename $filename]
+            if {$manlink ne ""} {
+                lappend found "• $manlink\n"
+            }
         }
     }
     return $found
@@ -140,7 +153,7 @@ oo::define App method view_manlink_page manlink {
     foreach subsect [$Tree children $section] {
         if {[$Tree item $subsect -text] eq $letter} {
             foreach filename [$Tree children $subsect] {
-                if {[string match */$page.* $filename]} {
+                if {[string match -nocase */$page.* $filename]} {
                     my view_page $filename
                     return
                 }
@@ -150,6 +163,21 @@ oo::define App method view_manlink_page manlink {
 }
 
 oo::define App method view_page filename {
+    set man [my get_text $filename]
+    $View delete 1.0 end
+    $View insert end [string trimright $man]
+    if {$filename eq "Found"} {
+        if {$FindWhat eq "apropos"} { text_stripe $View }
+    } else {
+        text_replace_ctrl_h $View
+    }
+    text_apply_styles $View
+    if {$filename eq "Found"} {
+        $View tag add special "end -1 line" end
+    }
+}
+
+oo::define App method get_text filename {
     if {$filename eq "Found"} {
         set man [join $Found ""]
     } else {
@@ -166,8 +194,5 @@ oo::define App method view_page filename {
             puts "error running 'man -Tutf8 $filename': $err"
         }
     }
-    $View delete 1.0 end
-    $View insert end [string trimright $man]
-    text_replace_ctrl_h $View
-    text_apply_styles $View
+    return $man
 }

@@ -35,9 +35,9 @@ proc text_replace_ctrl_h txt {
 }
 
 proc text_apply_styles txt {
-    foreach i [$txt search -all -regexp {[-\w]+\(\d\)} 2.0] {
-        set j "$i wordend + 3 chars"
-        $txt tag add manlink $i $j
+    foreach i [$txt search -all -regexp {[-.:\w]+\(\d[^)]*?\)} 1.0] {
+        set j [$txt search ) $i "$i lineend"]
+        $txt tag add manlink $i "$j + 1 char"
     }
     foreach i [$txt search -all -regexp {https?://} 1.0] {
         set j [$txt search -regexp {[\s>]} $i]
@@ -50,4 +50,12 @@ proc text_apply_styles txt {
     $txt tag remove url $last end
     $txt tag add header 1.0 1.end
     $txt tag add footer $last end
+}
+
+proc text_stripe txt {
+    set pos 1.0
+    while {[$txt compare $pos < end]} {
+        set pos [$txt index "$pos +2 lines"]
+        $txt tag add stripe $pos "$pos lineend"
+    }
 }

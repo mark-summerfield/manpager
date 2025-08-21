@@ -37,6 +37,7 @@ oo::define App method show {} {
     } else {
         my view_page $page
     }
+    focus $FindEntry
 }
 
 oo::define App method populate_tree {} {

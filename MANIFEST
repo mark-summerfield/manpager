@@ -7,7 +7,7 @@
 manpager.tcl # VERSION
 app-1.tm
 app_ui-1.tm
-app_actions-1.tm # TODO fix history
+app_actions-1.tm
 config_form-1.tm
 config-1.tm
 about_form-1.tm

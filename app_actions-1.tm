@@ -33,8 +33,9 @@ oo::define App method on_find {} {
 
 oo::define App method on_find_apropos {} {
     set found [list]
-    catch {
-        set lines [exec -encoding utf-8 -- man -k {*}[$FindEntry get]]
+    try {
+        set what [$FindEntry get]
+        set lines [exec -encoding utf-8 -- man -k {*}$what]
         foreach line [split $lines \n] {
             set parts [split $line]
             if {[llength $parts] > 2} {
@@ -44,20 +45,25 @@ oo::define App method on_find_apropos {} {
                 lappend found "• $manpage\t$desc\n"
             }
         }
+    } on error err {
+        puts "error running 'man -k $what': $err"
     }
     return $found
 }
 
 oo::define App method on_find_freetext {} {
     set found [list]
-    catch {
-        set filenames [exec -encoding utf-8 -- man -Kw {*}[$FindEntry get]]
+    try {
+        set what [$FindEntry get]
+        set filenames [exec -encoding utf-8 -- man -Kw {*}$what]
         foreach filename [split $filenames \n] {
             set manlink [man_link_for_filename $filename]
             if {$manlink ne ""} {
                 lappend found "• $manlink\n"
             }
         }
+    } on error err {
+        puts "error running 'man -Kw $what': $err"
     }
     return $found
 }

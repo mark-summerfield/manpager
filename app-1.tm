@@ -31,11 +31,21 @@ oo::define App method show {} {
     .top.findApropos invoke
     raise .
     update
-    set page [$Cfg page]  
-    if {$page eq "" || [$Cfg randomstartpage]} {
-        my show_random_page
+    my on_startup
+}
+
+oo::define App method on_startup {} {
+    if {$::argc > 0} {
+        $FindEntry delete 0 end
+        $FindEntry insert 0 [lindex $::argv 0]
+        my on_find
     } else {
-        my view_page $page
+        set page [$Cfg page]  
+        if {$page eq "" || [$Cfg randomstartpage]} {
+            my show_random_page
+        } else {
+            my view_page $page
+        }
     }
     focus $FindEntry
 }

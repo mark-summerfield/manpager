@@ -1,7 +1,4 @@
-# TODO
-# - implement searches:
-#   . name: search the tree itself in the current section (see view_manlink_page)
-#   . text: man -Kw text (slow)
+# TODO fix manlink highlighting/linking bug
 
 manpager.tcl # VERSION
 app-1.tm

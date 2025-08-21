@@ -1,5 +1,10 @@
 # Copyright © 2025 Mark Summerfield. All rights reserved.
 
+proc man_link_for_filename filename {
+    regexp {^(.*)\.(\d).*?(?:\.gz)?$} [file tail $filename] _ name sect
+    expr {[info exists name] && [info exists sect] ? "$name\($sect\)" : ""}
+}
+
 proc man_dirs path {
     set dirs [list]
     foreach dir [glob -directory $path -types d *] {

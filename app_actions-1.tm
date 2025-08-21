@@ -40,9 +40,8 @@ oo::define App method on_find_freetext {} {
     set found [list]
     set filenames [exec -encoding utf-8 -- man -Kw {*}[$FindEntry get]]
     foreach filename [split $filenames \n] {
-        regexp {^(.*)\.(\d).*?(?:\.gz)?$} [file tail $filename] _ name sect
-        if {[info exists name] && [info exists sect]} {
-            set manlink $name\($sect\)
+        set manlink [man_link_for_filename $filename]
+        if {$manlink ne ""} {
             lappend found "• $manlink\n"
         }
     }
@@ -50,7 +49,21 @@ oo::define App method on_find_freetext {} {
 }
 
 oo::define App method on_find_name {} {
-    puts on_find_name
+    set what [$FindEntry get]
+    set found [list]
+    foreach n [lseq 1 to 9] {
+        foreach letter [$Tree children S$n] {
+            foreach filename [$Tree children $letter] {
+                if {[string match -nocase *$what* $filename]} {
+                    set manlink [man_link_for_filename $filename]
+                    if {$manlink ne ""} {
+                        lappend found "• $manlink\n"
+                    }
+                }
+            }
+        }
+    }
+    return $found
 }
 
 oo::define App method on_tree_select {} {

@@ -31,8 +31,8 @@ oo::define App method make_widgets {} {
 
 oo::define App method make_controls {} {
     set tip tooltip::tooltip
-    ttk::label .top.findLabel -text Find -underline 0 -compound left \
-        -image [ui::icon edit-find.svg $::ICON_SIZE]
+    ttk::label .top.findLabel -text "Find Word" -underline 5 \
+        -compound left -image [ui::icon edit-find.svg $::ICON_SIZE]
     set FindEntry [ttk::entry .top.findEntry]
     $tip .top.findEntry "Word to find.\n\Press\
         Enter to start the search\nor F3 to do or redo the search\n(e.g.,\
@@ -117,10 +117,10 @@ oo::define App method make_bindings {} {
     bind . <Alt-a> {.top.findApropos invoke}
     bind . <Alt-b> [callback on_about]
     bind . <Alt-c> [callback on_config]
-    bind . <Alt-f> {focus .top.findEntry}
     bind . <Alt-m> [callback on_focus_tree]
     bind . <Alt-n> {.top.findName invoke}
     bind . <Alt-q> [callback on_quit]
     bind . <Alt-t> {.top.findFreeText invoke}
+    bind . <Alt-w> {focus .top.findEntry}
     wm protocol . WM_DELETE_WINDOW [callback on_quit]
 }

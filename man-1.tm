@@ -1,7 +1,8 @@
 # Copyright © 2025 Mark Summerfield. All rights reserved.
 
 proc man_link_for_filename filename {
-    regexp {^(.*)\.(\d).*?(?:\.gz)?$} [file tail $filename] _ name sect
+    regexp {^(.*)\.(\d).*?(?:\.gz)?(:?#\d+)?$} [file tail $filename] \
+        _ name sect
     if {[info exists name] && [info exists sect]} {
         return "$name\($sect\)"
     }

@@ -4,6 +4,7 @@ package require about_form
 package require config_form
 package require fileutil 1
 package require ui
+package require util
 
 oo::define App method on_find {} {
     tk busy .
@@ -82,6 +83,7 @@ oo::define App method on_find_name {} {
 oo::define App method on_tree_select {} {
     set sel [$Tree selection]
     if {$sel eq "Found" || [string match /* $sel]} {
+        set sel [regsub {#.*} $sel ""]
         my view_page $sel
     }
 }
@@ -168,7 +170,8 @@ oo::define App method view_page filename {
     $View insert end [string trimright $man]
     if {$filename eq "Found"} {
         if {$FindWhat eq "apropos"} { text_stripe $View }
-    } else {
+    } elseif {$filename ne "History"} {
+        my update_history $filename
         text_replace_ctrl_h $View
     }
     text_apply_styles $View
@@ -181,7 +184,6 @@ oo::define App method get_text filename {
     if {$filename eq "Found"} {
         set man [join $Found ""]
     } else {
-        $Cfg set_page $filename
         set fh [open |[list man -Tutf8 $filename]]
         try {
             try {
@@ -195,4 +197,28 @@ oo::define App method get_text filename {
         }
     }
     return $man
+}
+
+oo::define App method update_history filename {
+    $Cfg set_page $filename
+    set manlink [man_link_for_filename $filename]
+    if {$manlink ne ""} {
+        set past [$Tree children History]
+        set found false
+        foreach item $past {
+            set past_manlink [man_link_for_filename $item]
+            if {$past_manlink eq $manlink} {
+                set found true
+                break
+            }
+        }
+        $Tree delete $past
+        if {!$found} {
+            set past [linsert $past 0 $filename[uid]]
+        }
+        foreach filename $past {
+            puts $filename
+            $Tree insert History end -id $filename -text $manlink
+        }
+    }
 }

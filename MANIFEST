@@ -1,9 +1,13 @@
-# TODO History top-level tree item
+# TODO
+# - change top to toolbar with icons & shortcuts:
+#   Add Bookmark Ctrl+B | Delete Bookmark Ctrl+D | Config… Ctrl+C | \
+#   About Ctrl+A | Quit Ctrl+Q
+# - add bookmark support (like History)
 
 manpager.tcl # VERSION
 app-1.tm
 app_ui-1.tm
-app_actions-1.tm
+app_actions-1.tm # TODO fix history
 config_form-1.tm
 config-1.tm
 about_form-1.tm

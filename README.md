@@ -12,6 +12,11 @@ clickable (using showing pages in your web browser).
 
 ![Screenshot](images/screenshot.png)
 
+When launched from the command line you can provide a word (apropos) to
+search for in which case Manpager will begin with that search. Otherwise at
+startup it will show either a random man page or the last viewed page
+depending on your Config preference.
+
 Note: I use [Store](https://github.com/mark-summerfield/store) for version
 control so github is only used to make the code public.
 

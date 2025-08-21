@@ -1,6 +1,6 @@
 # Manpager
 
-A GUI Unix man page view (an alternative to gman).
+A GUI Unix man page viewer (an alternative to gman).
 
 Manpager presents a browsable tree view of the system’s man pages.
 

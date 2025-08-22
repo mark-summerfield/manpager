@@ -74,7 +74,7 @@ oo::define App method on_find_name {} {
     foreach n [lseq 1 to 9] {
         foreach letter [$Tree children S$n] {
             foreach filename [$Tree children $letter] {
-                if {[string match -nocase *$what* $filename]} {
+                if {[string match -nocase *$what* [file tail $filename]]} {
                     set manlink [man_link_for_filename $filename]
                     if {$manlink ne ""} {
                         lappend found "• $manlink\n"

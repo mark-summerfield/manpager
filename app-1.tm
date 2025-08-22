@@ -60,9 +60,7 @@ oo::define App method populate_tree {} {
             regexp {^.*\.(\d+).*?$} $filename _ section
             set name [file rootname [file tail $filename]]
             set i [string first . $name]
-            if {$i > -1} {
-                set name [string range $name 0 [incr i -1]]
-            }
+            if {$i > -1} { set name [string range $name 0 [incr i -1]] }
             set grand_parent [lindex $sections $section]
             set first [string toupper [string index $name 0]]
             if {![string is alpha $first]} { set first * }

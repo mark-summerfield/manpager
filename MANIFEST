@@ -1,9 +1,3 @@
-# TODO
-# - change top to toolbar with icons & shortcuts:
-#   Add Bookmark Ctrl+B | Delete Bookmark Ctrl+D | Config… Ctrl+C | \
-#   About Ctrl+A | Quit Ctrl+Q
-# - add bookmark support (like History)
-
 manpager.tcl # VERSION
 app-1.tm
 app_ui-1.tm
@@ -15,8 +9,9 @@ txt-1.tm
 man-1.tm
 util-1.tm
 
-form-1.tm
+abstract_form-1.tm
 ui-1.tm
+util-1.tm
 
 README.md
 

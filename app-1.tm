@@ -9,10 +9,10 @@ package require fileutil::traverse
 
 oo::class create App {
     variable Cfg
-    variable FindWhat
     variable Tree
     variable View
     variable FindEntry
+    variable FindCombobox
     variable Found
 }
 
@@ -20,7 +20,6 @@ oo::define App constructor {} {
     ui::wishinit
     tk appname Manpager
     set Cfg [Config load]
-    set FindWhat apropos
     my make_ui
     my populate_tree
 }
@@ -28,7 +27,6 @@ oo::define App constructor {} {
 oo::define App method show {} {
     wm deiconify .
     wm geometry . [$Cfg geometry]
-    .top.findApropos invoke
     raise .
     update
     my on_startup
@@ -51,32 +49,40 @@ oo::define App method on_startup {} {
 }
 
 oo::define App method populate_tree {} {
-    set page_count 0
-    $Tree delete [$Tree children {}]
-    set sections [my populate_sections]
-    set parents [dict create]
-    foreach filename [man_filenames [$Cfg path]] {
-        regexp {^.*\.(\d+).*?$} $filename _ section
-        set name [file rootname [file tail $filename]]
-        set i [string first . $name]
-        if {$i > -1} {
-            set name [string range $name 0 [incr i -1]]
+    tk busy .
+    update
+    try {
+        set page_count 0
+        $Tree delete [$Tree children {}]
+        set sections [my populate_sections]
+        set parents [dict create]
+        foreach filename [man_filenames [$Cfg path]] {
+            regexp {^.*\.(\d+).*?$} $filename _ section
+            set name [file rootname [file tail $filename]]
+            set i [string first . $name]
+            if {$i > -1} {
+                set name [string range $name 0 [incr i -1]]
+            }
+            set grand_parent [lindex $sections $section]
+            set first [string toupper [string index $name 0]]
+            if {![string is alpha $first]} { set first * }
+            set parent [dict getdef $parents $grand_parent $first ""]
+            if {$parent eq ""} {
+                set parent [$Tree insert $grand_parent end -text $first]
+                dict set parents $grand_parent $first $parent
+            }
+            if {$name ne "\["} {
+                $Tree insert $parent end -id $filename \
+                    -text $name\($section\)
+                incr page_count
+            }
         }
-        set grand_parent [lindex $sections $section]
-        set first [string toupper [string index $name 0]]
-        if {![string is alpha $first]} { set first * }
-        set parent [dict getdef $parents $grand_parent $first ""]
-        if {$parent eq ""} {
-            set parent [$Tree insert $grand_parent end -text $first]
-            dict set parents $grand_parent $first $parent
-        }
-        if {$name ne "\["} {
-            $Tree insert $parent end -id $filename -text $name\($section\)
-            incr page_count
-        }
+        .hsplit.left.viewLabel configure \
+            -text "Man Pages ([commas $page_count])"
+    } finally {
+        tk busy forget .
+        update
     }
-    .hsplit.left.viewLabel configure \
-        -text "Man Pages ([commas $page_count])"
 }
 
 oo::define App method populate_sections {} {

@@ -31,21 +31,21 @@ oo::define App method make_widgets {} {
 
 oo::define App method make_controls {} {
     set tip tooltip::tooltip
-    ttk::label .top.findLabel -text "Find Word" -underline 5 \
-        -compound left -image [ui::icon edit-find.svg $::ICON_SIZE]
+    ttk::label .top.findLabel -text Find -underline 0
     set FindEntry [ttk::entry .top.findEntry]
-    $tip .top.findEntry "Word to find.\n\Press\
-        Enter to start the search\nor F3 to do or redo the search\n(e.g.,\
-        after clicking a radio button)."
-    ttk::radiobutton .top.findApropos -text Apropos -underline 0 \
-        -variable [my varname FindWhat] -value apropos
-    $tip .top.findApropos "Search man page names and short descriptions."
-    ttk::radiobutton .top.findFreeText -text Text -underline 0 \
-        -variable [my varname FindWhat] -value freetext
-    $tip .top.findFreeText "Search all man page text—slow!"
-    ttk::radiobutton .top.findName -text Name -underline 0 \
-        -variable [my varname FindWhat] -value name
-    $tip .top.findName "Search the tree of man pages."
+    $tip $FindEntry "Word to find.\nClick Search or Press\
+        Enter or F3 to do or redo the search\n(e.g.,\
+        after setting Apropos or Text or Name)."
+    set FindCombobox [ttk::combobox .top.findWhatCombobox -width 10 \
+                      -values {Apropos Text Name}]
+    $FindCombobox set Apropos
+    $FindCombobox state readonly
+    $tip $FindCombobox "• Apropos to search for a keyword.\n• Text to\
+        search for free text (slow!).\n• Name to search man page filenames."
+    ttk::button .top.searchButton -text Search -underline 0 -compound left \
+        -image [ui::icon edit-find.svg $::MENU_ICON_SIZE] \
+        -command [callback on_find]
+    $tip .top.searchButton "Do or redo the search for the word to find."
     ttk::button .top.configButton -text Config… -underline 0 \
         -compound left -command [callback on_config] \
         -image [ui::icon preferences-system.svg $::MENU_ICON_SIZE]
@@ -96,13 +96,12 @@ oo::define App method make_view {} {
 oo::define App method make_layout {} {
     const opts "-pady 3 -padx 3"
     pack .top.findLabel -side left {*}$opts
-    pack .top.findEntry -fill x -expand true -side left
-    pack .top.findApropos -side left
-    pack .top.findFreeText -side left
-    pack .top.findName -side left
-    pack .top.quitButton -side right {*}$opts
-    pack .top.aboutButton -side right {*}$opts
-    pack .top.configButton -side right {*}$opts
+    pack .top.findEntry -side left -fill x -expand true
+    pack .top.findWhatCombobox -side left {*}$opts
+    pack .top.searchButton -side left {*}$opts
+    pack .top.configButton -side left {*}$opts
+    pack .top.aboutButton -side left {*}$opts
+    pack .top.quitButton -side left {*}$opts
     grid .top -row 0 -column 0 -sticky we
     grid .hsplit -row 1 -column 0 -sticky news
     grid rowconfigure . 1 -weight 1
@@ -114,13 +113,11 @@ oo::define App method make_bindings {} {
     bind $View <<Selection>> [callback on_text_select]
     bind .top.findEntry <Return> [callback on_find]
     bind . <F3> [callback on_find]
-    bind . <Alt-a> {.top.findApropos invoke}
     bind . <Alt-b> [callback on_about]
     bind . <Alt-c> [callback on_config]
+    bind . <Alt-f> {focus .top.findEntry}
     bind . <Alt-m> [callback on_focus_tree]
-    bind . <Alt-n> {.top.findName invoke}
     bind . <Alt-q> [callback on_quit]
-    bind . <Alt-t> {.top.findFreeText invoke}
-    bind . <Alt-w> {focus .top.findEntry}
+    bind . <Alt-s> [callback on_find]
     wm protocol . WM_DELETE_WINDOW [callback on_quit]
 }

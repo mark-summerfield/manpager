@@ -3,7 +3,7 @@
 package require about_form
 package require config_form
 package require fileutil 1
-package require ui
+package require ref
 package require util
 
 oo::define App method on_find {} {
@@ -12,12 +12,12 @@ oo::define App method on_find {} {
     try {
         catch {$Tree delete Found}
         $Tree insert {} end -id Found -text Found
-        switch $FindWhat {
-            apropos {set found [my on_find_apropos]}
-            freetext {set found [my on_find_freetext]}
-            name {set found [my on_find_name]}
+        switch [$FindCombobox get] {
+            Apropos {set found [my on_find_apropos]}
+            Text {set found [my on_find_freetext]}
+            Name {set found [my on_find_name]}
         }
-        lassign [ui::n_s [llength $found]] n s
+        lassign [util::n_s [llength $found]] n s
         set Found [list "Found $n man page$s\n"]
         lappend Found {*}[lsort -dictionary -unique $found]
         lappend Found "_\n"
@@ -119,7 +119,7 @@ oo::define App method on_text_select {} {
             if {[$View compare $first <= $index] && \
                     [$View compare $index <= $last]} {
                 set url [$View get $first $last]
-                ui::open_webpage $url
+                util::open_webpage $url
                 return
             }
         }
@@ -175,7 +175,7 @@ oo::define App method view_page filename {
     $View delete 1.0 end
     $View insert end [string trimright $man]
     if {$filename eq "Found"} {
-        if {$FindWhat eq "apropos"} { text_stripe $View }
+        if {[$FindCombobox get] eq "Apropos"} { text_stripe $View }
     } elseif {$filename ne "History"} {
         my update_history $filename
         text_replace_ctrl_h $View
@@ -211,7 +211,7 @@ oo::define App method update_history filename {
     if {$manlink ne ""} {
         set past [$Tree children History]
         $Tree delete $past
-        $Tree insert History end -id $filename#0 -text $manlink]
+        $Tree insert History end -id $filename#0 -text $manlink
         set n 1
         foreach name $past {
             set name [regsub {#\d+$} $name ""]

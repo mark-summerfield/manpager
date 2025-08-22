@@ -7,13 +7,13 @@ package require ui
 oo::class create ConfigForm {
     superclass AbstractForm
 
+    variable Ok
     variable Cfg
     variable Blinking
     variable FontFamily
     variable FontSize
     variable RandomStartPage
     variable Path
-    variable Ok
 }
 
 oo::define ConfigForm constructor {ok cfg} {
@@ -79,7 +79,6 @@ oo::define ConfigForm method make_widgets {} {
         -command [callback on_cancel]
 }
 
-
 oo::define ConfigForm method make_layout {} {
     const opts "-padx 3 -pady 3"
     grid .config.scaleLabel -row 0 -column 0 -sticky w {*}$opts
@@ -107,7 +106,6 @@ oo::define ConfigForm method make_layout {} {
     grid columnconfigure .config 1 -weight 1
 }
 
-
 oo::define ConfigForm method make_bindings {} {
     bind .config <Escape> [callback on_cancel]
     bind .config <Return> [callback on_ok]
@@ -119,7 +117,6 @@ oo::define ConfigForm method make_bindings {} {
     bind .config <Alt-r> {.config.randomPageRadiobutton invoke}
     bind .config <Alt-s> {focus .config.scaleSpinbox}
 }
-
 
 oo::define ConfigForm method on_font {} {
     tk fontchooser configure -parent .config \

@@ -62,11 +62,14 @@ oo::define App method make_controls {} {
 
 oo::define App method make_tree {} {
     set left [ttk::frame .hsplit.left]
-    ttk::label $left.viewLabel -text "Man Pages" -underline 0
+    set TreeLabel [ttk::label $left.viewLabel -text "Man Pages" \
+        -underline 0]
     set treeframe [ttk::frame $left.tree]
     set name tree
     set Tree [ttk::treeview $treeframe.$name -selectmode browse -show tree \
               -striped true]
+    $Tree column #0 -width [font measure TkDefaultFont \
+                            "1 Programs/commands nnn"]
     ui::scrollize $treeframe $name vertical
     pack $left.viewLabel -side top
     pack $treeframe -fill both -expand true
@@ -75,7 +78,8 @@ oo::define App method make_tree {} {
 
 oo::define App method make_view {} {
     set right [ttk::frame .hsplit.right]
-    set View [text $right.view -font Mono -undo false -wrap none -tabs 2i]
+    set View [text $right.view -font Mono -undo false -wrap none \
+                -tabs {2.25i 2.5i 2.75i 3i}]
     pack $View -fill both -expand true
     $View tag configure header -foreground darkblue -background lightcyan \
         -underline false

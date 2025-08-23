@@ -9,6 +9,7 @@ package require fileutil::traverse
 
 oo::class create App {
     variable Cfg
+    variable TreeLabel
     variable Tree
     variable View
     variable FindEntry
@@ -75,8 +76,7 @@ oo::define App method populate_tree {} {
                 incr page_count
             }
         }
-        .hsplit.left.viewLabel configure \
-            -text "Man Pages ([commas $page_count])"
+        $TreeLabel configure -text "Man Pages \[[commas $page_count]\]"
     } finally {
         tk busy forget .
         update

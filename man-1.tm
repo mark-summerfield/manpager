@@ -1,5 +1,7 @@
 # Copyright © 2025 Mark Summerfield. All rights reserved.
 
+package require util
+
 proc man_link_for_filename filename {
     regexp {^(.*)\.(\d).*?(?:\.gz)?(:?#\d+)?$} [file tail $filename] \
         _ name sect
@@ -39,5 +41,6 @@ proc man_filenames path {
 }
 
 proc man_filter filename {
-    expr {[regexp {^.*[.][1-9].*$} $filename] && [file isfile $filename]}
+    expr {[regexp {^.*[.][1-9].*$} $filename] && [file isfile $filename] \
+          && ![util::islink $filename]}
 }

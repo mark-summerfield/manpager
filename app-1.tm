@@ -59,8 +59,8 @@ oo::define App method populate_tree {} {
         set parents [dict create]
         foreach filename [man_filenames [$Cfg path]] {
             regexp {^.*\.(\d+).*?$} $filename _ section
-            set name [file rootname [file tail $filename]]
-            set i [string first . $name]
+            set name [regsub {.gz$} [file tail $filename] ""]
+            set i [string last . $name]
             if {$i > -1} { set name [string range $name 0 [incr i -1]] }
             set grand_parent [lindex $sections $section]
             set first [string toupper [string index $name 0]]

@@ -42,21 +42,22 @@ oo::define App method make_controls {} {
     $FindCombobox state readonly
     $tip $FindCombobox "• Apropos to search for a keyword.\n• Text to\
         search for free text (slow!).\n• Name to search man page filenames."
-    ttk::button .top.searchButton -text Search -underline 0 -compound left \
+    set opts "-compound left -width 9"
+    ttk::button .top.searchButton -text Search -underline 0 \
         -image [ui::icon edit-find.svg $::MENU_ICON_SIZE] \
-        -command [callback on_find]
+        -command [callback on_find] {*}$opts
     $tip .top.searchButton "Do or redo the search for the word to find."
     ttk::button .top.configButton -text Config… -underline 0 \
-        -compound left -command [callback on_config] \
-        -image [ui::icon preferences-system.svg $::MENU_ICON_SIZE]
+        -command [callback on_config] \
+        -image [ui::icon preferences-system.svg $::MENU_ICON_SIZE] {*}$opts
     $tip .top.configButton "Show configuration dialog."
-    ttk::button .top.aboutButton -text About -underline 1 -compound left \
+    ttk::button .top.aboutButton -text About -underline 1 \
         -image [ui::icon about.svg $::MENU_ICON_SIZE] \
-        -command [callback on_about]
+        -command [callback on_about] {*}$opts
     $tip .top.aboutButton "About Manpager."
-    ttk::button .top.quitButton -text Quit -underline 0 -compound left \
+    ttk::button .top.quitButton -text Quit -underline 0 \
         -image [ui::icon shutdown.svg $::MENU_ICON_SIZE] \
-        -command [callback on_quit]
+        -command [callback on_quit] {*}$opts
     $tip .top.quitButton "Save config and quit."
 }
 

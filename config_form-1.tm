@@ -46,9 +46,10 @@ oo::define ConfigForm method make_widgets {} {
         -underline 7 -variable [my varname Blinking]
     if {$Blinking} { .config.blinkCheckbutton state selected }
     $tip .config.blinkCheckbutton "Whether the text cursor should blink."
-    ttk::button .config.fontButton -text Font… -underline 0 -compound left \
+    set opts "-compound left -width 15"
+    ttk::button .config.fontButton -text Font… -underline 0 \
         -image [ui::icon preferences-desktop-font.svg $::ICON_SIZE] \
-        -command [callback on_font]
+        -command [callback on_font] {*}$opts
     $tip .config.fontButton "The font to use for displaying man\
         pages.\nBest to set the application’s scale (and restart) first."
     ttk::label .config.fontLabel -relief sunken \
@@ -63,8 +64,8 @@ oo::define ConfigForm method make_widgets {} {
     $tip .config.lastViewedPageRadiobutton \
         "Start at the last viewed man page."
     ttk::button .config.manPathButton -text "Man Pages Path…" -underline 0 \
-        -compound left -image [ui::icon folder.svg $::ICON_SIZE] \
-        -command [callback on_man_path]
+        -image [ui::icon folder.svg $::ICON_SIZE] \
+        -command [callback on_man_path] {*}$opts
     $tip .config.manPathButton "The path to the system’s man pages."
     ttk::label .config.manPathLabel -relief sunken -text [$Cfg path]
     ttk::label .config.configFileLabel -text "Config file"

@@ -101,9 +101,10 @@ oo::define App method make_view {} {
 oo::define App method make_layout {} {
     const opts "-pady 3 -padx 3"
     pack .top.findLabel -side left {*}$opts
-    pack .top.findEntry -side left -fill x -expand true
+    pack .top.findEntry -side left
     pack .top.findWhatCombobox -side left {*}$opts
     pack .top.searchButton -side left {*}$opts
+    pack [ttk::frame .top.pad] -side left -expand true
     pack .top.configButton -side left {*}$opts
     pack .top.aboutButton -side left {*}$opts
     pack .top.quitButton -side left {*}$opts

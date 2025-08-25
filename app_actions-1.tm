@@ -17,14 +17,20 @@ oo::define App method on_find {} {
             Text {set found [my on_find_freetext]}
             Name {set found [my on_find_name]}
         }
-        lassign [util::n_s [llength $found]] n s
-        set Found [list "Found $n man page$s\n"]
-        lappend Found {*}[lsort -dictionary -unique $found]
-        lappend Found "_\n"
-        $Tree see Found
-        $Tree selection set Found
-        $Tree focus Found
-        my view_page Found
+        set size [llength $found]
+        if {$size == 1} {
+            regexp {^[•\s]+([^(]+\(\d[^)]*\)).*$} [lindex $found 0] _ page
+            my view_page $page
+        } else {
+            lassign [util::n_s $size] n s
+            set Found [list "Found $n man page$s\n"]
+            lappend Found {*}[lsort -dictionary -unique $found]
+            lappend Found "_\n"
+            $Tree see Found
+            $Tree selection set Found
+            $Tree focus Found
+            my view_page Found
+        }
     } finally {
         tk busy forget .
         update
@@ -91,6 +97,18 @@ oo::define App method on_tree_select {} {
     if {$sel eq "Found" || [string match /* $sel]} {
         set sel [regsub {#.*} $sel ""]
         my view_page $sel
+    } elseif {[string match {S[1-9]} $sel]} {
+        foreach item [$Tree children $sel] {
+            set letter [$Tree item $item -text]
+            if {$letter eq "I"} {
+                foreach page [$Tree children $item] {
+                    if {[string match */intro.* $page]} {
+                        my view_page $page
+                        return
+                    }
+                }
+            }
+        }
     }
 }
 
@@ -207,19 +225,21 @@ oo::define App method get_text filename {
 
 oo::define App method update_history filename {
     $Cfg set_page $filename
-    set manlink [man_link_for_filename $filename]
-    if {$manlink ne ""} {
-        set past [$Tree children History]
-        $Tree delete $past
-        $Tree insert History end -id $filename#0 -text $manlink
-        set n 1
-        foreach name $past {
-            set name [regsub {#\d+$} $name ""]
-            if {$name ne $filename} {
-                set manlink [man_link_for_filename $name]
-                if {$manlink ne ""} {
-                    $Tree insert History end -id $name#$n -text $manlink
-                    incr n
+    if {![string match */intro.* $filename]} {
+        set manlink [man_link_for_filename $filename]
+        if {$manlink ne ""} {
+            set past [$Tree children History]
+            $Tree delete $past
+            $Tree insert History end -id $filename#0 -text $manlink
+            set n 1
+            foreach name $past {
+                set name [regsub {#\d+$} $name ""]
+                if {$name ne $filename} {
+                    set manlink [man_link_for_filename $name]
+                    if {$manlink ne ""} {
+                        $Tree insert History end -id $name#$n -text $manlink
+                        incr n
+                    }
                 }
             }
         }

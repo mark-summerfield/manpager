@@ -1,8 +1,3 @@
-# TODO If exactly one page found show it directly
-# TODO When category chosen (e.g., 1 Programs/commands)
-# if has I child and if I child has intro child show intro
-# TODO Back button?
-
 manpager.tcl # VERSION
 app-1.tm
 app_ui-1.tm

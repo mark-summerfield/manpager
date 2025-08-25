@@ -131,8 +131,8 @@ oo::define App method on_config {} {
     set fontfamily [$Cfg fontfamily]
     set fontsize [$Cfg fontsize]
     set path [$Cfg path]
-    ConfigForm new $ok $Cfg
-    tkwait window .config
+    set form [ConfigForm new $ok $Cfg]
+    tkwait window [$form form]
     if {[$ok get]} {
         if {$fontfamily ne [$Cfg fontfamily] || \
                 $fontsize != [$Cfg fontsize]} {

@@ -44,19 +44,23 @@ oo::define App method make_controls {} {
         search for free text (slow!).\n• Name to search man page filenames."
     set opts "-compound left -width 9"
     ttk::button .top.searchButton -text Search -underline 0 \
-        -image [ui::icon edit-find.svg $::MENU_ICON_SIZE] \
+        -image [ui::icon edit-find.svg $::ICON_SIZE] \
         -command [callback on_find] {*}$opts
+    $tip .top.searchButton "Do or redo the search for the word to find."
+    ttk::button .top.randomButton -text Random -underline 0 \
+        -image [ui::icon dice.svg $::ICON_SIZE] \
+        -command [callback show_random_page] {*}$opts
     $tip .top.searchButton "Do or redo the search for the word to find."
     ttk::button .top.configButton -text Config… -underline 0 \
         -command [callback on_config] \
-        -image [ui::icon preferences-system.svg $::MENU_ICON_SIZE] {*}$opts
+        -image [ui::icon preferences-system.svg $::ICON_SIZE] {*}$opts
     $tip .top.configButton "Show configuration dialog."
     ttk::button .top.aboutButton -text About -underline 1 \
-        -image [ui::icon about.svg $::MENU_ICON_SIZE] \
+        -image [ui::icon about.svg $::ICON_SIZE] \
         -command [callback on_about] {*}$opts
     $tip .top.aboutButton "About Manpager."
     ttk::button .top.quitButton -text Quit -underline 0 \
-        -image [ui::icon shutdown.svg $::MENU_ICON_SIZE] \
+        -image [ui::icon shutdown.svg $::ICON_SIZE] \
         -command [callback on_quit] {*}$opts
     $tip .top.quitButton "Save config and quit."
 }
@@ -104,6 +108,7 @@ oo::define App method make_layout {} {
     pack .top.findEntry -side left
     pack .top.findWhatCombobox -side left {*}$opts
     pack .top.searchButton -side left {*}$opts
+    pack .top.randomButton -side left {*}$opts
     pack [ttk::frame .top.pad] -side left -expand true
     pack .top.configButton -side left {*}$opts
     pack .top.aboutButton -side left {*}$opts
@@ -124,6 +129,7 @@ oo::define App method make_bindings {} {
     bind . <Alt-f> {focus .top.findEntry}
     bind . <Alt-m> [callback on_focus_tree]
     bind . <Alt-q> [callback on_quit]
+    bind . <Alt-r> [callback show_random_page]
     bind . <Alt-s> [callback on_find]
     wm protocol . WM_DELETE_WINDOW [callback on_quit]
 }

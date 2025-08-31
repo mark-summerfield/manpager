@@ -97,8 +97,9 @@ oo::define App method populate_sections {} {
 }
 
 oo::define App method show_random_page {} {
+    set sections [linsert [lrange [$Tree children {}] 0 end-1] end S1 S1]
     foreach _ [lseq 9] {
-        set section [lrandom [lrange [$Tree children {}] 0 end-1]]
+        set section [lrandom $sections]
         set letters [$Tree children $section]
         if {[llength $letters] < 3} { continue }
         set letter [lrandom $letters]

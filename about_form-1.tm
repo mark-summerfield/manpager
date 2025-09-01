@@ -62,7 +62,7 @@ oo::define AboutForm method Populate {} {
     $txt tag add spaceabove $img
     $txt tag add center $img
     set add [list $txt insert end]
-    {*}$add "\nManpager $::VERSION\n" {center title}
+    {*}$add "\n[tk appname] $::VERSION\n" {center title}
     {*}$add "A Unix man page viewer.\n\n" {center navy}
     set year [clock format [clock seconds] -format %Y]
     if {$year > 2025} { set year "2025-[string range $year end-1 end]" }

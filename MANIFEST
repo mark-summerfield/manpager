@@ -1,3 +1,15 @@
+# TODO
+#
+# +----+--------------+        +----+--------------+
+# |tree|  text        |        |tree|  text        |
+# |    |              |   →    |    |              |
+# |    |              |        |    |              |
+# |    |              |        |    |              |
+# |    |              |        |    +--------------+
+# |    |              |        |    |Look for|____||
+# +----+--------------+        +----+--------------+
+# Add support for Look within a page Alt-l & F3
+
 manpager.tcl # VERSION
 app-1.tm
 app_ui-1.tm

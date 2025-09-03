@@ -109,6 +109,7 @@ oo::define App method make_page_view rightframe {
     $View tag configure url -foreground brown -underline true
     $View tag configure stripe -background gray90
     $View tag configure special -foreground gray85 -background gray85
+    $View tag configure name -font MonoBold -foreground darkgoldenrod4
     ui::scrollize $rightframe view both
 }
 

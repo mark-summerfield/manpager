@@ -50,6 +50,11 @@ proc text_apply_styles txt {
     $txt tag remove url $last end
     $txt tag add header 1.0 1.end
     $txt tag add footer $last end
+    set i [$txt search -exact NAME 1.0 10.0]
+    if {$i ne ""} {
+        set i [$txt index "$i + 1 line"]
+        $txt tag add name $i "$i lineend"
+    }
 }
 
 proc text_stripe txt {

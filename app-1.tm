@@ -17,6 +17,7 @@ oo::class create App {
     variable SearchFound
     variable FindEntry
     variable FindIndex
+    variable LinoLabel
 }
 
 oo::define App constructor {} {

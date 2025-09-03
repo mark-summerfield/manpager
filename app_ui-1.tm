@@ -123,17 +123,20 @@ oo::define App method make_find_panel bottomframe {
         -width 9 -command [callback on_find]
     tooltip::tooltip $bottomframe.findButton "Do or redo the find in\
         the current man page."
+    set LinoLabel [ttk::label $bottomframe.lineLabel -relief sunken]
     const opts "-pady 3 -padx 3"
     pack $bottomframe.findLabel -side left {*}$opts
-    pack $bottomframe.findEntry -side left -fill x -expand true {*}$opts
+    pack $bottomframe.findEntry -side left -fill both -expand true -padx 3 \
+        -pady 9
     pack $bottomframe.findButton -side left {*}$opts
+    pack $LinoLabel -side left -fill both -padx 3 -pady 9
 }
 
 oo::define App method make_layout {} {
     const opts "-pady 3 -padx 3"
     grid .searchLabel -row 0 -column 0 {*}$opts
-    grid .searchEntry -row 0 -column 1 -sticky we
-    grid .searchWhatCombobox -row 0 -column 2 {*}$opts
+    grid .searchEntry -row 0 -column 1 -sticky news -padx 3 -pady 9
+    grid .searchWhatCombobox -row 0 -column 2 -sticky news -padx 3 -pady 9
     grid .searchButton -row 0 -column 3 {*}$opts
     grid .randomButton -row 0 -column 4 {*}$opts
     grid [ttk::label .pad] -row 0 -column 5 -sticky we

@@ -32,21 +32,21 @@ oo::define App method make_controls {} {
     set tip tooltip::tooltip
     ttk::label .searchLabel -text Search -underline 1
     set SearchEntry [ttk::entry .searchEntry]
-    $tip $SearchEntry "Word to search for.\nClick the Search icon or Press\
-        Enter or F5 to do or redo the search\n(e.g.,\
+    $tip $SearchEntry "Word to search for to find man pages.\nClick the\
+        Search button or Press Enter or F5 to do or redo the search\n(e.g.,\
         after setting Apropos or Text or Name)."
     set SearchCombobox [ttk::combobox .searchWhatCombobox -width 10 \
                         -values {Apropos Text Name}]
     $SearchCombobox set Apropos
     $SearchCombobox state readonly
-    $tip $SearchCombobox "• Apropos to search for a keyword.\n• Text to\
-        search for free text (slow!).\n• Name to search man page filenames."
+    $tip $SearchCombobox "Use:\n  • Apropos to search for a\
+        keyword.\n  • Text to search for free text (slow!).\n  • Name to\
+        search man page filenames."
     set opts "-compound left -width 9"
     ttk::button .searchButton -text Search -underline 0 \
         -image [ui::icon edit-find.svg $::ICON_SIZE] \
         -command [callback on_search] {*}$opts
-    $tip .searchButton "Do or redo the search for the word to\
-        search."
+    $tip .searchButton "Do or redo the search for man pages."
     ttk::button .randomButton -text Random -underline 0 \
         -image [ui::icon dice.svg $::ICON_SIZE] \
         -command [callback show_random_page] {*}$opts
@@ -116,11 +116,13 @@ oo::define App method make_find_panel bottomframe {
     ttk::label $bottomframe.findLabel -text Find -underline 1
     set FindEntry [ttk::entry $bottomframe.findEntry]
     tooltip::tooltip $FindEntry "Text to find in the current man\
-        page.\nClick the Find icon or Press Enter or F3 to do or redo\
+        page.\nClick the Find button or Press Enter or F3 to do or redo\
         the find."
     ttk::button $bottomframe.findButton -text Find -underline 0 \
         -image [ui::icon edit-find.svg $::ICON_SIZE] -compound left \
         -width 9 -command [callback on_find]
+    tooltip::tooltip $bottomframe.findButton "Do or redo the find in\
+        the current man page."
     const opts "-pady 3 -padx 3"
     pack $bottomframe.findLabel -side left {*}$opts
     pack $bottomframe.findEntry -side left -fill x -expand true {*}$opts

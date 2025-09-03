@@ -17,7 +17,7 @@ oo::define App method prepare_ui {} {
     wm title . [tk appname]
     wm iconname . [tk appname]
     wm minsize . 640 480
-    catch {wm iconphoto . -default [ui::icon icon.svg]}
+    wm iconphoto . -default [ui::icon icon.svg]
     make_fonts [$Cfg fontfamily] [$Cfg fontsize]
 }
 
@@ -136,12 +136,14 @@ oo::define App method make_layout {} {
     grid .searchWhatCombobox -row 0 -column 2 {*}$opts
     grid .searchButton -row 0 -column 3 {*}$opts
     grid .randomButton -row 0 -column 4 {*}$opts
-    grid .configButton -row 0 -column 5 {*}$opts
-    grid .aboutButton -row 0 -column 6 {*}$opts
-    grid .quitButton -row 0 -column 7 {*}$opts
-    grid .hsplit -row 1 -column 0 -columnspan 8 -sticky news
+    grid [ttk::label .pad] -row 0 -column 5 -sticky we
+    grid .configButton -row 0 -column 6 {*}$opts
+    grid .aboutButton -row 0 -column 7 {*}$opts
+    grid .quitButton -row 0 -column 8 {*}$opts
+    grid .hsplit -row 1 -column 0 -columnspan 9 -sticky news
     grid rowconfigure . 1 -weight 1
     grid columnconfigure . 1 -weight 1
+    grid columnconfigure . 5 -weight 1
 }
 
 oo::define App method make_bindings {} {

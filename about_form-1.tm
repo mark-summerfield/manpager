@@ -14,6 +14,7 @@ oo::define AboutForm constructor {} {
     my make_bindings
     next .aboutForm [callback on_close]
     my show_modal .aboutForm.closeButton
+    focus .aboutForm.closeButton
 }
 
 oo::define AboutForm method make_widgets {} {

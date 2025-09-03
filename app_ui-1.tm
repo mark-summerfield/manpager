@@ -22,7 +22,6 @@ oo::define App method prepare_ui {} {
 }
 
 oo::define App method make_widgets {} {
-    ttk::frame .top
     ttk::panedwindow .hsplit -orient horizontal
     my make_controls
     my make_tree
@@ -31,38 +30,39 @@ oo::define App method make_widgets {} {
 
 oo::define App method make_controls {} {
     set tip tooltip::tooltip
-    ttk::label .top.findLabel -text Find -underline 0
-    set FindEntry [ttk::entry .top.findEntry]
-    $tip $FindEntry "Word to find.\nClick Search or Press\
-        Enter or F3 to do or redo the search\n(e.g.,\
+    ttk::label .searchLabel -text Search -underline 1
+    set FindEntry [ttk::entry .searchEntry]
+    $tip $FindEntry "Word to search for.\nClick the Search icon or Press\
+        Enter or F5 to do or redo the search\n(e.g.,\
         after setting Apropos or Text or Name)."
-    set FindCombobox [ttk::combobox .top.findWhatCombobox -width 10 \
+    set FindCombobox [ttk::combobox .searchWhatCombobox -width 10 \
                       -values {Apropos Text Name}]
     $FindCombobox set Apropos
     $FindCombobox state readonly
     $tip $FindCombobox "• Apropos to search for a keyword.\n• Text to\
         search for free text (slow!).\n• Name to search man page filenames."
     set opts "-compound left -width 9"
-    ttk::button .top.searchButton -text Search -underline 0 \
+    ttk::button .searchButton -text Search -underline 0 \
         -image [ui::icon edit-find.svg $::ICON_SIZE] \
-        -command [callback on_find] {*}$opts
-    $tip .top.searchButton "Do or redo the search for the word to find."
-    ttk::button .top.randomButton -text Random -underline 0 \
+        -command [callback on_search] {*}$opts
+    $tip .searchButton "Do or redo the search for the word to\
+        search."
+    ttk::button .randomButton -text Random -underline 0 \
         -image [ui::icon dice.svg $::ICON_SIZE] \
         -command [callback show_random_page] {*}$opts
-    $tip .top.searchButton "Do or redo the search for the word to find."
-    ttk::button .top.configButton -text Config… -underline 0 \
+    $tip .randomButton "Show a randomly chosen man page."
+    ttk::button .configButton -text Config… -underline 0 \
         -command [callback on_config] \
         -image [ui::icon preferences-system.svg $::ICON_SIZE] {*}$opts
-    $tip .top.configButton "Show configuration dialog."
-    ttk::button .top.aboutButton -text About -underline 1 \
+    $tip .configButton "Show configuration dialog."
+    ttk::button .aboutButton -text About -underline 1 \
         -image [ui::icon about.svg $::ICON_SIZE] \
         -command [callback on_about] {*}$opts
-    $tip .top.aboutButton "About Manpager."
-    ttk::button .top.quitButton -text Quit -underline 0 \
+    $tip .aboutButton "About Manpager."
+    ttk::button .quitButton -text Quit -underline 0 \
         -image [ui::icon shutdown.svg $::ICON_SIZE] \
         -command [callback on_quit] {*}$opts
-    $tip .top.quitButton "Save config and quit."
+    $tip .quitButton "Save config and quit."
 }
 
 oo::define App method make_tree {} {
@@ -104,32 +104,30 @@ oo::define App method make_view {} {
 
 oo::define App method make_layout {} {
     const opts "-pady 3 -padx 3"
-    pack .top.findLabel -side left {*}$opts
-    pack .top.findEntry -side left
-    pack .top.findWhatCombobox -side left {*}$opts
-    pack .top.searchButton -side left {*}$opts
-    pack .top.randomButton -side left {*}$opts
-    pack [ttk::frame .top.pad] -side left -expand true
-    pack .top.configButton -side left {*}$opts
-    pack .top.aboutButton -side left {*}$opts
-    pack .top.quitButton -side left {*}$opts
-    grid .top -row 0 -column 0 -sticky we
-    grid .hsplit -row 1 -column 0 -sticky news
+    grid .searchLabel -row 0 -column 0 {*}$opts
+    grid .searchEntry -row 0 -column 1 -sticky we
+    grid .searchWhatCombobox -row 0 -column 2 {*}$opts
+    grid .searchButton -row 0 -column 3 {*}$opts
+    grid .randomButton -row 0 -column 4 {*}$opts
+    grid .configButton -row 0 -column 5 {*}$opts
+    grid .aboutButton -row 0 -column 6 {*}$opts
+    grid .quitButton -row 0 -column 7 {*}$opts
+    grid .hsplit -row 1 -column 0 -columnspan 8 -sticky news
     grid rowconfigure . 1 -weight 1
-    grid columnconfigure . 0 -weight 1
+    grid columnconfigure . 1 -weight 1
 }
 
 oo::define App method make_bindings {} {
     bind $Tree <<TreeviewSelect>> [callback on_tree_select]
     bind $View <<Selection>> [callback on_text_select]
-    bind .top.findEntry <Return> [callback on_find]
-    bind . <F3> [callback on_find]
+    bind .searchEntry <Return> [callback on_search]
+    bind . <F5> [callback on_search]
     bind . <Alt-b> [callback on_about]
     bind . <Alt-c> [callback on_config]
-    bind . <Alt-f> {focus .top.findEntry}
+    bind . <Alt-e> {focus .searchEntry}
     bind . <Alt-m> [callback on_focus_tree]
     bind . <Alt-q> [callback on_quit]
     bind . <Alt-r> [callback show_random_page]
-    bind . <Alt-s> [callback on_find]
+    bind . <Alt-s> [callback on_search]
     wm protocol . WM_DELETE_WINDOW [callback on_quit]
 }

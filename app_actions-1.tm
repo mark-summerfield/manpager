@@ -6,7 +6,7 @@ package require fileutil 1
 package require ref
 package require util
 
-oo::define App method on_find {} {
+oo::define App method on_search {} {
     tk busy .
     update
     try {

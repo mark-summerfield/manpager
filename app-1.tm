@@ -12,9 +12,11 @@ oo::class create App {
     variable TreeLabel
     variable Tree
     variable View
+    variable SearchEntry
+    variable SearchCombobox
+    variable SearchFound
     variable FindEntry
-    variable FindCombobox
-    variable Found
+    variable FindIndex
 }
 
 oo::define App constructor {} {
@@ -34,9 +36,10 @@ oo::define App method show {} {
 }
 
 oo::define App method on_startup {} {
+    set FindIndex 1.0
     if {$::argc > 0} {
-        $FindEntry delete 0 end
-        $FindEntry insert 0 [lindex $::argv 0]
+        $SearchEntry delete 0 end
+        $SearchEntry insert 0 [lindex $::argv 0]
         my on_find
     } else {
         set page [$Cfg page]  
@@ -46,7 +49,7 @@ oo::define App method on_startup {} {
             my view_page $page
         }
     }
-    focus $FindEntry
+    focus $SearchEntry
 }
 
 oo::define App method populate_tree {} {

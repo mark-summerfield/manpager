@@ -12,10 +12,10 @@ oo::define App method on_search {} {
     try {
         catch {$Tree delete Found}
         $Tree insert {} end -id Found -text Found
-        switch [$FindCombobox get] {
-            Apropos {set found [my on_find_apropos]}
-            Text {set found [my on_find_freetext]}
-            Name {set found [my on_find_name]}
+        switch [$SearchCombobox get] {
+            Apropos {set found [my on_search_apropos]}
+            Text {set found [my on_search_freetext]}
+            Name {set found [my on_search_name]}
         }
         set size [llength $found]
         if {$size == 1} {
@@ -23,9 +23,9 @@ oo::define App method on_search {} {
             my view_page $page
         } else {
             lassign [util::n_s $size] n s
-            set Found [list "Found $n man page$s\n"]
-            lappend Found {*}[lsort -dictionary -unique $found]
-            lappend Found "_\n"
+            set SearchFound [list "Found $n man page$s\n"]
+            lappend SearchFound {*}[lsort -dictionary -unique $found]
+            lappend SearchFound "_\n"
             $Tree see Found
             $Tree selection set Found
             $Tree focus Found
@@ -37,10 +37,10 @@ oo::define App method on_search {} {
     }
 }
 
-oo::define App method on_find_apropos {} {
+oo::define App method on_search_apropos {} {
     set found [list]
     try {
-        set what [$FindEntry get]
+        set what [$SearchEntry get]
         set lines [exec -encoding utf-8 -- man -k {*}$what]
         foreach line [split $lines \n] {
             set parts [split $line]
@@ -57,10 +57,10 @@ oo::define App method on_find_apropos {} {
     return $found
 }
 
-oo::define App method on_find_freetext {} {
+oo::define App method on_search_freetext {} {
     set found [list]
     try {
-        set what [$FindEntry get]
+        set what [$SearchEntry get]
         set filenames [exec -encoding utf-8 -- man -Kw {*}$what]
         foreach filename [split $filenames \n] {
             set manlink [man_link_for_filename $filename]
@@ -74,8 +74,8 @@ oo::define App method on_find_freetext {} {
     return $found
 }
 
-oo::define App method on_find_name {} {
-    set what [$FindEntry get]
+oo::define App method on_search_name {} {
+    set what [$SearchEntry get]
     set found [list]
     foreach n [lseq 1 to 9] {
         foreach letter [$Tree children S$n] {
@@ -90,6 +90,24 @@ oo::define App method on_find_name {} {
         }
     }
     return $found
+}
+
+oo::define App method on_find {} {
+    $FindEntry configure -foreground black
+    set what [$FindEntry get]
+    if {$what ne ""} {
+        set i [$View search -exact -nocase $what $FindIndex end]
+        if {$i ne "" && [$View compare $i != $FindIndex]} {
+            $View tag remove sel 1.0 end
+            set j [$View index "$i + [string length $what] chars"]
+            $View tag add sel $i $j
+            $View see $i
+            set FindIndex [$View index $j]
+        } else {
+            $FindEntry configure -foreground red
+            set FindIndex 1.0
+        }
+    }
 }
 
 oo::define App method on_tree_select {} {
@@ -193,7 +211,7 @@ oo::define App method view_page filename {
     $View delete 1.0 end
     $View insert end [string trimright $man]
     if {$filename eq "Found"} {
-        if {[$FindCombobox get] eq "Apropos"} { text_stripe $View }
+        if {[$SearchCombobox get] eq "Apropos"} { text_stripe $View }
     } elseif {$filename ne "History"} {
         my update_history $filename
         text_replace_ctrl_h $View
@@ -202,11 +220,13 @@ oo::define App method view_page filename {
     if {$filename eq "Found"} {
         $View tag add special "end -1 line" end
     }
+    set FindIndex 1.0
+    $View mark set insert 1.0
 }
 
 oo::define App method get_text filename {
     if {$filename eq "Found"} {
-        set man [join $Found ""]
+        set man [join $SearchFound ""]
     } else {
         set fh [open |[list man -Tutf8 $filename]]
         try {

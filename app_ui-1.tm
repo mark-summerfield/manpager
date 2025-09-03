@@ -31,15 +31,15 @@ oo::define App method make_widgets {} {
 oo::define App method make_controls {} {
     set tip tooltip::tooltip
     ttk::label .searchLabel -text Search -underline 1
-    set FindEntry [ttk::entry .searchEntry]
-    $tip $FindEntry "Word to search for.\nClick the Search icon or Press\
+    set SearchEntry [ttk::entry .searchEntry]
+    $tip $SearchEntry "Word to search for.\nClick the Search icon or Press\
         Enter or F5 to do or redo the search\n(e.g.,\
         after setting Apropos or Text or Name)."
-    set FindCombobox [ttk::combobox .searchWhatCombobox -width 10 \
-                      -values {Apropos Text Name}]
-    $FindCombobox set Apropos
-    $FindCombobox state readonly
-    $tip $FindCombobox "• Apropos to search for a keyword.\n• Text to\
+    set SearchCombobox [ttk::combobox .searchWhatCombobox -width 10 \
+                        -values {Apropos Text Name}]
+    $SearchCombobox set Apropos
+    $SearchCombobox state readonly
+    $tip $SearchCombobox "• Apropos to search for a keyword.\n• Text to\
         search for free text (slow!).\n• Name to search man page filenames."
     set opts "-compound left -width 9"
     ttk::button .searchButton -text Search -underline 0 \
@@ -83,9 +83,20 @@ oo::define App method make_tree {} {
 
 oo::define App method make_view {} {
     set right [ttk::frame .hsplit.right]
-    set View [text $right.view -font Mono -undo false -wrap none \
+    set rightframe [ttk::frame $right.frame]
+    my make_page_view $rightframe
+    set bottomframe [ttk::frame $right.bottomframe]
+    my make_find_panel $bottomframe
+    pack $rightframe -side top -fill both -expand true
+    pack $bottomframe -side bottom -fill x
+    .hsplit add $right
+}
+
+oo::define App method make_page_view rightframe {
+    set View [text $rightframe.view -font Mono -undo false -wrap none \
                 -tabs {2.25i 2.5i 2.75i 3i}]
     pack $View -fill both -expand true
+    $View tag configure sel -selectbackground yellow
     $View tag configure header -foreground darkblue -background lightcyan \
         -underline false
     $View tag configure footer -foreground gray25 -background gray85 \
@@ -98,8 +109,22 @@ oo::define App method make_view {} {
     $View tag configure url -foreground brown -underline true
     $View tag configure stripe -background gray90
     $View tag configure special -foreground gray85 -background gray85
-    ui::scrollize $right view both
-    .hsplit add $right
+    ui::scrollize $rightframe view both
+}
+
+oo::define App method make_find_panel bottomframe {
+    ttk::label $bottomframe.findLabel -text Find -underline 1
+    set FindEntry [ttk::entry $bottomframe.findEntry]
+    tooltip::tooltip $FindEntry "Text to find in the current man\
+        page.\nClick the Find icon or Press Enter or F3 to do or redo\
+        the find."
+    ttk::button $bottomframe.findButton -text Find -underline 0 \
+        -image [ui::icon edit-find.svg $::ICON_SIZE] -compound left \
+        -width 9 -command [callback on_find]
+    const opts "-pady 3 -padx 3"
+    pack $bottomframe.findLabel -side left {*}$opts
+    pack $bottomframe.findEntry -side left -fill x -expand true {*}$opts
+    pack $bottomframe.findButton -side left {*}$opts
 }
 
 oo::define App method make_layout {} {
@@ -120,11 +145,15 @@ oo::define App method make_layout {} {
 oo::define App method make_bindings {} {
     bind $Tree <<TreeviewSelect>> [callback on_tree_select]
     bind $View <<Selection>> [callback on_text_select]
-    bind .searchEntry <Return> [callback on_search]
+    bind $SearchEntry <Return> [callback on_search]
+    bind $FindEntry <Return> [callback on_find]
+    bind . <F3> [callback on_find]
     bind . <F5> [callback on_search]
     bind . <Alt-b> [callback on_about]
     bind . <Alt-c> [callback on_config]
     bind . <Alt-e> {focus .searchEntry}
+    bind . <Alt-f> [callback on_find]
+    bind . <Alt-i> "focus $FindEntry"
     bind . <Alt-m> [callback on_focus_tree]
     bind . <Alt-q> [callback on_quit]
     bind . <Alt-r> [callback show_random_page]

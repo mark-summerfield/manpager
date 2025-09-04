@@ -13,7 +13,6 @@ oo::define App method make_ui {} {
 }
 
 oo::define App method prepare_ui {} {
-    wm withdraw .
     wm title . [tk appname]
     wm iconname . [tk appname]
     wm minsize . 640 480

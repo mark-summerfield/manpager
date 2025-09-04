@@ -21,6 +21,7 @@ oo::class create App {
 }
 
 oo::define App constructor {} {
+    wm withdraw .
     ui::wishinit
     tk appname Manpager
     set Cfg [Config load]

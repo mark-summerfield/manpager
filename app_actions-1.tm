@@ -223,7 +223,7 @@ oo::define App method view_page filename {
     set FindIndex 1.0
     $View mark set insert 1.0
     $LinoLabel configure -text \
-        "[commas [expr {int([$View index end])}]] lines"
+        "[commas [expr {int([$View index end]) - 1}]] lines"
 }
 
 oo::define App method get_text filename {

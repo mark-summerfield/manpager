@@ -139,7 +139,7 @@ oo::define App method make_layout {} {
     grid .searchWhatCombobox -row 0 -column 2 -sticky news -padx 3 -pady 9
     grid .searchButton -row 0 -column 3 {*}$opts
     grid .randomButton -row 0 -column 4 {*}$opts
-    grid [ttk::label .pad] -row 0 -column 5 -sticky we
+    # column 5 is empty — but stretchable!
     grid .configButton -row 0 -column 6 {*}$opts
     grid .aboutButton -row 0 -column 7 {*}$opts
     grid .quitButton -row 0 -column 8 {*}$opts

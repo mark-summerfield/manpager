@@ -163,18 +163,19 @@ oo::define App method on_text_select {} {
 }
 
 oo::define App method on_config {} {
+    set config [Config new]
     set ok [Ref new false]
-    set fontfamily [$Cfg fontfamily]
-    set fontsize [$Cfg fontsize]
-    set path [$Cfg path]
-    set form [ConfigForm new $ok $Cfg]
+    set fontfamily [$config fontfamily]
+    set fontsize [$config fontsize]
+    set path [$config path]
+    set form [ConfigForm new $ok]
     tkwait window [$form form]
     if {[$ok get]} {
-        if {$fontfamily ne [$Cfg fontfamily] || \
-                $fontsize != [$Cfg fontsize]} {
-            make_fonts [$Cfg fontfamily] [$Cfg fontsize]
+        if {$fontfamily ne [$config fontfamily] || \
+                $fontsize != [$config fontsize]} {
+            make_fonts [$config fontfamily] [$config fontsize]
         }
-        if {$path ne [$Cfg path]} {
+        if {$path ne [$config path]} {
             my populate_tree
         }
     }
@@ -182,7 +183,11 @@ oo::define App method on_config {} {
 
 oo::define App method on_about {} { AboutForm new }
 
-oo::define App method on_quit {} { $Cfg save ; exit }
+oo::define App method on_quit {} {
+    set config [Config new]
+    $config save
+    exit
+}
 
 oo::define App method view_manlink_page manlink {
     regexp {(.*)\((\d).*} [string tolower $manlink] _ page section
@@ -246,7 +251,8 @@ oo::define App method get_text filename {
 }
 
 oo::define App method update_history filename {
-    $Cfg set_page $filename
+    set config [Config new]
+    $config set_page $filename
     if {![string match */intro.* $filename]} {
         set manlink [man_link_for_filename $filename]
         if {$manlink ne ""} {

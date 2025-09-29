@@ -8,7 +8,6 @@ package require util
 package require fileutil::traverse 
 
 oo::class create App {
-    variable Cfg
     variable TreeLabel
     variable Tree
     variable View
@@ -23,14 +22,15 @@ oo::class create App {
 oo::define App constructor {} {
     ui::wishinit
     tk appname Manpager
-    set Cfg [Config load]
+    Config load
     my make_ui
     my populate_tree
 }
 
 oo::define App method show {} {
+    set config [Config new]
     wm deiconify .
-    wm geometry . [$Cfg geometry]
+    wm geometry . [$config geometry]
     raise .
     update
     my on_startup
@@ -43,8 +43,9 @@ oo::define App method on_startup {} {
         $SearchEntry insert 0 [lindex $::argv 0]
         my on_find
     } else {
-        set page [$Cfg page]  
-        if {$page eq "" || [$Cfg randomstartpage]} {
+        set config [Config new]
+        set page [$config page]  
+        if {$page eq "" || [$config randomstartpage]} {
             my show_random_page
         } else {
             my view_page $page
@@ -57,11 +58,12 @@ oo::define App method populate_tree {} {
     tk busy .
     update
     try {
+        set config [Config new]
         set page_count 0
         $Tree delete [$Tree children {}]
         set sections [my populate_sections]
         set parents [dict create]
-        foreach filename [man_filenames [$Cfg path]] {
+        foreach filename [man_filenames [$config path]] {
             regexp {^.*\.(\d+).*?$} $filename _ section
             set name [regsub {.gz$} [file tail $filename] ""]
             set i [string last . $name]

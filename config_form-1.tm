@@ -8,7 +8,6 @@ oo::class create ConfigForm {
     superclass AbstractForm
 
     variable Ok
-    variable Cfg
     variable Blinking
     variable FontFamily
     variable FontSize
@@ -16,14 +15,14 @@ oo::class create ConfigForm {
     variable Path
 }
 
-oo::define ConfigForm constructor {ok cfg} {
+oo::define ConfigForm constructor ok {
     set Ok $ok
-    set Cfg $cfg
-    set Blinking [$Cfg blinking]
-    set FontFamily [$Cfg fontfamily]
-    set FontSize [$Cfg fontsize]
-    set RandomStartPage [$Cfg randomstartpage]
-    set Path [$Cfg path]
+    set config [Config new]
+    set Blinking [$config blinking]
+    set FontFamily [$config fontfamily]
+    set FontSize [$config fontsize]
+    set RandomStartPage [$config randomstartpage]
+    set Path [$config path]
     my make_widgets 
     my make_layout
     my make_bindings
@@ -32,6 +31,7 @@ oo::define ConfigForm constructor {ok cfg} {
 }
 
 oo::define ConfigForm method make_widgets {} {
+    set config [Config new]
     tk::toplevel .configForm
     wm resizable .configForm false false
     wm title .configForm "[tk appname] — Config"
@@ -56,7 +56,7 @@ oo::define ConfigForm method make_widgets {} {
     $tip .configForm.frame.fontButton "The font to use for displaying man\
         pages.\nBest to set the application’s scale (and restart) first."
     ttk::label .configForm.frame.fontLabel -relief sunken \
-        -text "[$Cfg fontfamily] [$Cfg fontsize]"
+        -text "[$config fontfamily] [$config fontsize]"
     ttk::label .configForm.frame.startPageLabel -text "Start at"
     ttk::radiobutton .configForm.frame.randomPageRadiobutton \
         -text "Random Page" -underline 0 -value true \
@@ -74,11 +74,11 @@ oo::define ConfigForm method make_widgets {} {
     $tip .configForm.frame.manPathButton \
         "The path to the system’s man pages."
     ttk::label .configForm.frame.manPathLabel -relief sunken \
-        -text [$Cfg path]
+        -text [$config path]
     ttk::label .configForm.frame.configFileLabel -foreground gray25 \
         -text "Config file"
     ttk::label .configForm.frame.configFilenameLabel -foreground gray25 \
-        -text [$Cfg filename] -relief sunken
+        -text [$config filename] -relief sunken
     ttk::frame .configForm.frame.buttons
     ttk::button .configForm.frame.buttons.okButton -text OK -underline 0 \
         -compound left -image [ui::icon ok.svg $::ICON_SIZE] \
@@ -164,11 +164,12 @@ oo::define ConfigForm method on_man_path {} {
 
 oo::define ConfigForm method on_ok {} {
     tk scaling [.configForm.frame.scaleSpinbox get]
-    $Cfg set_blinking $Blinking
-    $Cfg set_fontfamily $FontFamily
-    $Cfg set_fontsize $FontSize
-    $Cfg set_randomstartpage $RandomStartPage
-    $Cfg set_path $Path
+    set config [Config new]
+    $config set_blinking $Blinking
+    $config set_fontfamily $FontFamily
+    $config set_fontsize $FontSize
+    $config set_randomstartpage $RandomStartPage
+    $config set_path $Path
     $Ok set true
     my delete
 }

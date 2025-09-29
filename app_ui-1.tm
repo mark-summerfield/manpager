@@ -17,7 +17,8 @@ oo::define App method prepare_ui {} {
     wm iconname . [tk appname]
     wm minsize . 640 480
     wm iconphoto . -default [ui::icon icon.svg]
-    make_fonts [$Cfg fontfamily] [$Cfg fontsize]
+    set config [Config new]
+    make_fonts [$config fontfamily] [$config fontsize]
 }
 
 oo::define App method make_widgets {} {

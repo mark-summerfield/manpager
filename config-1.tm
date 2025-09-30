@@ -15,48 +15,37 @@ oo::singleton create Config {
     variable Page
 }
 
-oo::define Config constructor {{filename ""} {geometry ""}} {
-    set Filename $filename
+oo::define Config constructor {} {
     set Blinking true
-    set Geometry $geometry
+    set Geometry ""
     set FontFamily [font configure TkFixedFont -family]
     set FontSize [expr {2 + [font configure TkFixedFont -size]}]
     set RandomStartPage true
     set Path /usr/share/man
     set Page ""
-}
-
-oo::define Config classmethod load {} {
-    set filename [util::get_ini_filename]
-    set config [Config new]
-    $config set_filename $filename
-    if {[file exists $filename] && [file size $filename]} {
-        set ini [ini::open $filename -encoding utf-8 r]
+    set Filename [util::get_ini_filename]
+    if {[file exists $Filename] && [file size $Filename]} {
+        set ini [ini::open $Filename -encoding utf-8 r]
         try {
             tk scaling [ini::value $ini General Scale 1.0]
-            $config set_blinking [ini::value $ini General Blinking \
-                                    [$config blinking]]
-            if {![$config blinking]} {
+            set Blinking [ini::value $ini General Blinking $Blinking]
+            if {!$Blinking} {
                 option add *insertOffTime 0
                 ttk::style configure . -insertofftime 0
             }
-            $config set_geometry [ini::value $ini General Geometry \
-                [$config geometry]]
-            $config set_fontfamily [ini::value $ini General FontFamily \
-                [$config fontfamily]]
-            $config set_fontsize [ini::value $ini General FontSize \
-                [$config fontsize]]
-            $config set_randomstartpage [ini::value $ini General \
-                RandomStartPage [$config randomstartpage]]
-            $config set_path [ini::value $ini General Path [$config path]]
-            $config set_page [ini::value $ini General Page [$config page]]
+            set Geometry [ini::value $ini General Geometry $Geometry]
+            set FontFamily [ini::value $ini General FontFamily $FontFamily]
+            set FontSize [ini::value $ini General FontSize $FontSize]
+            set RandomStartPage [ini::value $ini General RandomStartPage \
+                $RandomStartPage]
+            set Path [ini::value $ini General Path $Path]
+            set Page [ini::value $ini General Page $Page]
         } on error err {
-            puts "invalid config in '$filename'; using defaults: $err"
+            puts "invalid config in '$Filename'; using defaults: $err"
         } finally {
             ini::close $ini
         }
     }
-    return $config
 }
 
 oo::define Config method save {} {

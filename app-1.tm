@@ -22,7 +22,7 @@ oo::class create App {
 oo::define App constructor {} {
     ui::wishinit
     tk appname Manpager
-    Config load
+    Config new ;# we need tk scaling done early
     my make_ui
     my populate_tree
 }

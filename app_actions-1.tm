@@ -181,7 +181,10 @@ oo::define App method on_config {} {
     }
 }
 
-oo::define App method on_about {} { AboutForm new }
+oo::define App method on_about {} {
+    AboutForm new "A Unix man page viewer" \
+        https://github.com/mark-summerfield/manpager
+}
 
 oo::define App method on_quit {} {
     set config [Config new]

@@ -19,6 +19,9 @@ oo::class create App {
     variable LinoLabel
 }
 
+package require app_actions
+package require app_ui
+
 oo::define App constructor {} {
     ui::wishinit
     tk appname Manpager

@@ -7,7 +7,7 @@ package require ui
 package require util
 package require fileutil::traverse 
 
-oo::class create App {
+oo::singleton create App {
     variable TreeLabel
     variable Tree
     variable View

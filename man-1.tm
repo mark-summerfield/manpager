@@ -33,9 +33,7 @@ proc man_filenames path {
         regexp {^.*\.(\d+).*?$} $a _ sa
         set b [file tail $b]
         regexp {^.*\.(\d+).*?$} $b _ sb
-        if {$sa == $sb} {
-            return [string compare -nocase $a $b]
-        }
+        if {$sa == $sb} { return [string compare -nocase $a $b] }
         expr {$sa < $sb ? -1 : 1}
     }] $filenames
 }

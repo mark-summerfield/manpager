@@ -155,7 +155,7 @@ oo::define App method on_text_select {} {
             if {[$View compare $first <= $index] && \
                     [$View compare $index <= $last]} {
                 set url [$View get $first $last]
-                util::open_webpage $url
+                util::open_url $url
                 return
             }
         }

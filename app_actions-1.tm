@@ -96,7 +96,7 @@ oo::define App method on_find {} {
     $FindEntry configure -foreground black
     set what [$FindEntry get]
     if {$what ne ""} {
-        set i [$View search -exact -nocase $what $FindIndex end]
+        set i [$View search -exact -nocase -- $what $FindIndex end]
         if {$i ne "" && [$View compare $i != $FindIndex]} {
             $View tag remove sel 1.0 end
             set j [$View index "$i + [string length $what] chars"]

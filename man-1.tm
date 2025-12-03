@@ -8,7 +8,6 @@ proc man_link_for_filename filename {
     if {[info exists name] && [info exists sect]} {
         return "$name\($sect\)"
     }
-    return ""
 }
 
 proc man_dirs path {

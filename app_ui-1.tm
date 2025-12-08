@@ -1,6 +1,7 @@
 # Copyright © 2025 Mark Summerfield. All rights reserved.
 
 package require autoscroll 1
+package require scrollutil_tile 2
 package require tooltip 2
 package require txt
 package require ui
@@ -72,12 +73,13 @@ oo::define App method make_tree {} {
     set TreeLabel [ttk::label $left.viewLabel -text "Man Pages" \
         -underline 0]
     set treeframe [ttk::frame $left.tree]
-    set name tree
-    set Tree [ttk::treeview $treeframe.$name -selectmode browse -show tree \
-              -striped true]
+    set sa [scrollutil::scrollarea $treeframe.sa -xscrollbarmode none]
+    set Tree [ttk::treeview $treeframe.sa.tree -selectmode browse \
+              -show tree -striped true]
+    $sa setwidget $Tree
+    pack $sa -fill both -expand 1
     $Tree column #0 -width [font measure TkDefaultFont \
                             "1 Programs/commands nnn"]
-    ui::scrollize $treeframe $name vertical
     pack $left.viewLabel -side top
     pack $treeframe -fill both -expand true
     .hsplit add $left
@@ -95,9 +97,11 @@ oo::define App method make_view {} {
 }
 
 oo::define App method make_page_view rightframe {
-    set View [text $rightframe.view -font Mono -undo false -wrap none \
+    set sa [scrollutil::scrollarea $rightframe.sa]
+    set View [text $rightframe.sa.view -font Mono -undo false -wrap none \
                 -tabs {2.25i 2.5i 2.75i 3i}]
-    pack $View -fill both -expand true
+    $sa setwidget $View
+    pack $sa -fill both -expand 1
     $View tag configure sel -selectbackground yellow
     $View tag configure header -foreground darkblue -background lightcyan \
         -underline false
@@ -112,7 +116,6 @@ oo::define App method make_page_view rightframe {
     $View tag configure stripe -background gray90
     $View tag configure special -foreground gray85 -background gray85
     $View tag configure name -font MonoBold -foreground darkgoldenrod4
-    ui::scrollize $rightframe view both
 }
 
 oo::define App method make_find_panel bottomframe {

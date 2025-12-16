@@ -75,13 +75,13 @@ oo::define App method make_tree {} {
     set treeframe [ttk::frame $left.tree]
     set sa [scrollutil::scrollarea $treeframe.sa -xscrollbarmode none]
     set Tree [ttk::treeview $treeframe.sa.tree -selectmode browse \
-              -show tree -striped true]
+              -show tree -striped 1]
     $sa setwidget $Tree
     pack $sa -fill both -expand 1
     $Tree column #0 -width [font measure TkDefaultFont \
                             "1 Programs/commands nnn"]
     pack $left.viewLabel -side top
-    pack $treeframe -fill both -expand true
+    pack $treeframe -fill both -expand 1
     .hsplit add $left
 }
 
@@ -91,28 +91,28 @@ oo::define App method make_view {} {
     my make_page_view $rightframe
     set bottomframe [ttk::frame $right.bottomframe]
     my make_find_panel $bottomframe
-    pack $rightframe -side top -fill both -expand true
+    pack $rightframe -side top -fill both -expand 1
     pack $bottomframe -side bottom -fill x
     .hsplit add $right
 }
 
 oo::define App method make_page_view rightframe {
     set sa [scrollutil::scrollarea $rightframe.sa]
-    set View [text $rightframe.sa.view -font Mono -undo false -wrap none \
+    set View [text $rightframe.sa.view -font Mono -undo 0 -wrap none \
                 -tabs {2.25i 2.5i 2.75i 3i}]
     $sa setwidget $View
     pack $sa -fill both -expand 1
     $View tag configure sel -selectbackground yellow
     $View tag configure header -foreground darkblue -background lightcyan \
-        -underline false
+        -underline 0
     $View tag configure footer -foreground gray25 -background gray85 \
-        -underline false
+        -underline 0
     $View tag configure bold -font MonoBold -foreground blue
     $View tag configure option -font MonoBold -foreground green
     $View tag configure subhead -font MonoBold -foreground navy
     $View tag configure italic -font MonoItalic -foreground green
-    $View tag configure manlink -foreground darkcyan -underline true
-    $View tag configure url -foreground brown -underline true
+    $View tag configure manlink -foreground darkcyan -underline 1
+    $View tag configure url -foreground brown -underline 1
     $View tag configure stripe -background gray90
     $View tag configure special -foreground gray85 -background gray85
     $View tag configure name -font MonoBold -foreground darkgoldenrod4
@@ -133,10 +133,10 @@ oo::define App method make_find_panel bottomframe {
     set LinoLabel [ttk::label $bottomframe.lineLabel -relief sunken]
     const opts "-pady 3 -padx 3"
     pack $bottomframe.findLabel -side left {*}$opts
-    pack $bottomframe.findEntry -side left -fill both -expand true -padx 3 \
+    pack $bottomframe.findEntry -side left -fill both -expand 1 -padx 3 \
         -pady 9
     pack $bottomframe.findButton -side left {*}$opts
-    pack $LinoLabel -side left -fill both -padx 3 -pady 9
+    pack $LinoLabel -side left -fill both {*}$opts
 }
 
 oo::define App method make_layout {} {

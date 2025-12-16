@@ -164,7 +164,7 @@ oo::define App method on_text_select {} {
 
 oo::define App method on_config {} {
     set config [Config new]
-    set ok [Ref new false]
+    set ok [Ref new 0]
     set fontfamily [$config fontfamily]
     set fontsize [$config fontsize]
     set path [$config path]

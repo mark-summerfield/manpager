@@ -16,11 +16,11 @@ oo::singleton create Config {
 }
 
 oo::define Config constructor {} {
-    set Blinking true
+    set Blinking 1
     set Geometry ""
     set FontFamily [font configure TkFixedFont -family]
     set FontSize [expr {2 + [font configure TkFixedFont -size]}]
-    set RandomStartPage true
+    set RandomStartPage 1
     set Path /usr/share/man
     set Page ""
     set Filename [util::get_ini_filename]

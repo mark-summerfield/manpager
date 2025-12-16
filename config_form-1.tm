@@ -33,7 +33,7 @@ oo::define ConfigForm constructor ok {
 oo::define ConfigForm method make_widgets {} {
     set config [Config new]
     tk::toplevel .configForm
-    wm resizable .configForm false false
+    wm resizable .configForm 0 0
     wm title .configForm "[tk appname] — Config"
     ttk::frame .configForm.mf
     set tip tooltip::tooltip
@@ -60,12 +60,12 @@ oo::define ConfigForm method make_widgets {} {
         -text "[$config fontfamily] [$config fontsize]"
     ttk::label .configForm.mf.startPageLabel -text "Start at"
     ttk::radiobutton .configForm.mf.randomPageRadiobutton \
-        -text "Random Page" -underline 0 -value true \
+        -text "Random Page" -underline 0 -value 1 \
         -variable [my varname RandomStartPage]
     $tip .configForm.mf.randomPageRadiobutton \
         "Start at a random man page."
-    ttk::radiobutton .configForm.mf.lastViewedPageRadiobutton \
-        -value false -text "Last Viewed Page" -underline 0 \
+    ttk::radiobutton .configForm.mf.lastViewedPageRadiobutton -value 0 \
+        -text "Last Viewed Page" -underline 0 \
         -variable [my varname RandomStartPage]
     $tip .configForm.mf.lastViewedPageRadiobutton \
         "Start at the last viewed man page."
@@ -112,13 +112,12 @@ oo::define ConfigForm method make_layout {} {
     grid .configForm.mf.configFilenameLabel -row 8 -column 1 \
         -columnspan 2 -sticky we {*}$opts
     grid .configForm.mf.buttons -row 9 -column 0 -columnspan 3 -sticky we
-    pack [ttk::frame .configForm.mf.buttons.pad1] -side left -expand true
+    pack [ttk::frame .configForm.mf.buttons.pad1] -side left -expand 1
     pack .configForm.mf.buttons.okButton -side left {*}$opts
     pack .configForm.mf.buttons.cancelButton -side left {*}$opts
-    pack [ttk::frame .configForm.mf.buttons.pad2] -side right \
-        -expand true
+    pack [ttk::frame .configForm.mf.buttons.pad2] -side right -expand 1
     grid columnconfigure .configForm 1 -weight 1
-    pack .configForm.mf -fill both -expand true
+    pack .configForm.mf -fill both -expand 1
 }
 
 oo::define ConfigForm method make_bindings {} {
@@ -155,7 +154,7 @@ oo::define ConfigForm method on_font_chosen args {
 }
 
 oo::define ConfigForm method on_man_path {} {
-    set dir [tk_chooseDirectory -parent .configForm -mustexist true \
+    set dir [tk_chooseDirectory -parent .configForm -mustexist 1 \
         -title "[tk appname] — Choose Man Pages Path" -initialdir $Path]
     if {$dir ne "" && $dir ne $Path} {
         .configForm.mf.manPathLabel configure -text $dir
@@ -171,7 +170,7 @@ oo::define ConfigForm method on_ok {} {
     $config set_fontsize $FontSize
     $config set_randomstartpage $RandomStartPage
     $config set_path $Path
-    $Ok set true
+    $Ok set 1
     my delete
 }
 

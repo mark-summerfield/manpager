@@ -1,7 +1,7 @@
 # Copyright © 2025 Mark Summerfield. All rights reserved.
 
 proc make_fonts {family size} {
-    catch { font delete Mono MonoBold MonoItalic } ;# delete if present
+    foreach name {Mono MonoBold MonoItalic} { catch { font delete $name } }
     font create Mono -family $family -size $size
     font create MonoBold -family [font configure Mono -family] \
         -size $size -weight bold

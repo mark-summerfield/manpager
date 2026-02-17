@@ -76,6 +76,7 @@ oo::define App method make_tree {} {
     set sa [scrollutil::scrollarea $treeframe.sa -xscrollbarmode none]
     set Tree [ttk::treeview $treeframe.sa.tree -selectmode browse \
               -show tree -striped 1]
+    ui::apply_treeview_bindings $Tree
     $sa setwidget $Tree
     pack $sa -fill both -expand 1
     $Tree column #0 -width [font measure TkDefaultFont \
